@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput } from 'react-native';
+import { StyleSheet, View, TextInput, ActivityIndicator } from 'react-native';
 import { Button, Text } from "native-base";
 import FormControls from './FormControls';
 import CsAppText from '../CsAppText';
@@ -40,7 +40,7 @@ class FormLogin extends Component {
 					style={styles.button}
 					onPress = { () => {validate()}}
 				>
-					<Text style={styles.title}>Login</Text>
+					{(this.props.validating == true) ? <ActivityIndicator size="large" color="#FFFFFF" /> : <Text style={styles.title}>Login</Text>}
 				</Button>
 			</View>
 		)

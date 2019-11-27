@@ -133,7 +133,15 @@ class FormMoistureMOT extends Component {
 						</View>
 
 						<View style={styles.row}>
-							<View style={styles.one2}>
+							<View style={styles.one3}>
+								<CsAppLabel>Property ID</CsAppLabel>
+								<CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="propertyId"
+								/>
+							</View>
+							<View style={styles.one3}>
 								<CsAppLabel>Author</CsAppLabel>
 								<CsInput
 								  	handleChange={handleChange}
@@ -141,7 +149,7 @@ class FormMoistureMOT extends Component {
 									identifier="author"
 								/>
 							</View>
-							<View style={styles.one2}>
+							<View style={styles.one3}>
 								<CsAppLabel>Client</CsAppLabel>
 							    <CsInput
 								  	handleChange={handleChange}

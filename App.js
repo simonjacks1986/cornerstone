@@ -15,6 +15,7 @@ const initialState = {
   loggedOut: 0,
   propertyId: propertyId.toUpperCase(),
   isUploading: false,
+  validating: false,
   photos: {},
   suAmountOfSections: 2,
   moAmountOfSections: 1,
@@ -112,8 +113,14 @@ export default class App extends React.Component {
             validating: false,
             user: { isLoggedIn: true }
           });
-        } else { console.log('Failed to store auth'); }
-      } else { Alert.alert('Incorrect details'); } 
+        } else { 
+          console.log('Failed to store auth'); 
+          this.setState({ validating: false });
+        }
+      } else { 
+        Alert.alert('Incorrect details');
+        this.setState({ validating: false });
+      } 
     }).catch((error) => { console.error(error); });
   } 
 

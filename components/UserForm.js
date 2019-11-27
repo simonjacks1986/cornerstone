@@ -44,6 +44,7 @@ class UserForm extends Component {
 					handleChange={handleChange}
 					validate={validate}
 					values={values}
+					validating={values.validating}
 				/>
 			)
 		} else {

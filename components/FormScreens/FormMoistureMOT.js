@@ -43,7 +43,7 @@ class FormMoistureMOT extends Component {
 	handleTimePicked = time => {
 		const { handleChoice } = this.props;
 		this.showTimePicker();
-		handleChoice('time', time.getHours() + ":" + time.getMinutes() + ":" + time.getSeconds());
+		handleChoice('time', time.getHours() + ":" + time.getMinutes());
 	};
 
 	async componentDidMount() {

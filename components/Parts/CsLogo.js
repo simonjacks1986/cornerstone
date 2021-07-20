@@ -5,7 +5,7 @@ class CsLogo extends Component {
   	render() {
 	    return (
 	        <Image
-	        	source={require('../assets/cornerstone_logo.png')}
+	        	source={require('../../assets/cornerstone_logo.png')}
 	        />
 	    );
 	}

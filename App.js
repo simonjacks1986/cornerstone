@@ -1,74 +1,66 @@
 import React from 'react';
-import { StyleSheet, Text, View, ScrollView, Image, Modal, TouchableHighlight, SafeAreaView, AsyncStorage, Alert } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Alert, ActivityIndicator, Image } from 'react-native';
 import { Header, Left, Body, Right, Button, Icon, Root } from "native-base";
-import UserForm from './components/UserForm';
-import CsLogo from './components/CsLogo';
-import CsMenuToggle from './components/CsMenuToggle';
-import { Font, AppLoading } from "expo";
-import FormModalHeaderMenu from './components/FormScreens/Modal/FormModalHeaderMenu';
-
-
-const propertyId = "PROP" + [...Array(10)].map(i=>(~~(Math.random()*36)).toString(36)).join('');
-const initialState = {
-  loading: true,
-  menuVisible: false,
-  loggedOut: 0,
-  propertyId: propertyId.toUpperCase(),
-  isUploading: false,
-  validating: false,
-  photos: {},
-  suAmountOfSections: 2,
-  moAmountOfSections: 1,
-  simAmountOfSections: 2,
-  venAmountOfSections: 1,
-  intAmountOfSections: 1,
-  atsAmountOfSections: 1,
-  obsgAmountOfSections: 2,
-  obstAmountOfSections: 2,
-  menuVisible: false,
-  loadScreen: false,
-  user: {
-    isLoggedIn: false,
-    authToken: null,
-    id: null,
-    name: null
-  },
-}
+import AppLoading from 'expo-app-loading';
+import VoidApp from './VoidApp';
+import MotApp from './MotApp';
+import FormLogin from './components/FormLogin'
+import theme from './assets/styles/common.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = initialState;
+    this.state = {
+      loading: true,
+      loggedOut: 0,
+      validating: false,
+      loadScreen: false,
+      menuVisible: false,
+      user: {
+        isLoggedIn: 0,
+        authToken: null,
+        id: null,
+        name: null
+      },
+      whichScreen: 2,
+    };
+  }
+
+  switchStep = (step) => {
+    if(step == 1) {
+      Alert.alert(
+        'Are you sure you want to leave this survey? All unsaved progress will be lost.', '', [ 
+          { text: 'Yes', onPress: () => this.setState({ whichScreen: step })},
+          { text: 'Cancel', onPress: () => console.log('Cancelled'), style: 'cancel'},
+        ],{cancelable: false},
+      );
+    } else {
+      this.setState({ whichScreen: step });  
+    }
   }
 
   setMenuVisible = (visible) => {
-      this.setState({menuVisible: visible});
+    this.setState({menuVisible: visible});
   }
 
   logOutUser = async () => {
     await AsyncStorage.setItem('user', JSON.stringify(
       {
-        isLoggedIn: false,
+        isLoggedIn: 0,
         authToken: null,
         id: null,
         name: null,
       })
     );
     this.setState({loggedOut: 1});
-    this.setState({user:{isLoggedIn: false}});
+    this.setState({user:{isLoggedIn: 0}});
     this.setState({menuVisible: false});
     return true;
   }
 
-  async componentWillMount() {
-    await Expo.Font.loadAsync({
-      Roboto: require("native-base/Fonts/Roboto.ttf"),
-      Roboto_medium: require("native-base/Fonts/Roboto_medium.ttf"),
-    });
-    this.setState({ loading: false });
-  }
-
   componentDidMount = async () => {
+    this.setState({ loading: false });
     try {
       const value = await AsyncStorage.getItem('user');
       if (value !== null) {
@@ -83,14 +75,6 @@ export default class App extends React.Component {
         })
       }
     } catch (error) { /* Do nowt and go to login screen */ }
-
-    try {
-      const listOfSessions = await AsyncStorage.getItem('savedSessions');
-      if (listOfSessions !== null) {
-        let arrayOfSessions = JSON.parse(listOfSessions);
-        this.setState({savedSessions: arrayOfSessions});
-      }
-    } catch (error) { console.log('No saved sessions'); }
   }
 
   validate = () => {
@@ -99,7 +83,7 @@ export default class App extends React.Component {
     formData.append('type', 'login');
     formData.append('login', this.state.username);
     formData.append('password', this.state.password);
-    return fetch('http://digital-dev.co.uk/cornerstone/client-login/', {
+    return fetch('https://dashboard.propertymot.uk/client-login/', {
       method: 'POST',
       body: formData, 
     })
@@ -111,7 +95,7 @@ export default class App extends React.Component {
         if (this.saveUserStorage(returnData)){
           this.setState({
             validating: false,
-            user: { isLoggedIn: true }
+            user: { isLoggedIn: 1 }
           });
         } else { 
           console.log('Failed to store auth'); 
@@ -127,7 +111,7 @@ export default class App extends React.Component {
   async saveUserStorage(userData){
     if (userData) {
       await AsyncStorage.setItem('user', JSON.stringify({
-          isLoggedIn: true,
+          isLoggedIn: 1,
           authToken: userData.auth_token,
           id: userData.user_id,
           name: userData.user_login
@@ -138,276 +122,107 @@ export default class App extends React.Component {
     return false;
   }
 
-
-  // Saving state functions
-  confirmRemoveSessionStorage = (sessionKey) => {
-    Alert.alert(
-      'Are you sure you want to delete this saved session?', '', [ 
-        { text: 'Yes', onPress: () => this.removeSessionStorage(sessionKey)},
-        { text: 'Cancel', onPress: () => console.log('Cancelled'), style: 'cancel'},
-      ],{cancelable: false},
-    );
-  }
-
-  removeSessionStorage = async (sessionKey) => {
-    newArrayOfSessions = [];
-    await AsyncStorage.removeItem(sessionKey);
-    const listOfSessions = await AsyncStorage.getItem('savedSessions');
-    arrayOfSessions = JSON.parse(listOfSessions);
-    arrayOfSessions.map((item, key) => 
-      (sessionKey !== item) && newArrayOfSessions.push(item)
-    );
-    await AsyncStorage.setItem('savedSessions', JSON.stringify(newArrayOfSessions));
-    this.setState({savedSessions: newArrayOfSessions});
-  }
-
-  saveSessionStorage = async () => {
-    const dataToSave = JSON.stringify(this.state);
-    await AsyncStorage.setItem(this.state.propertyId, dataToSave);
-    arrayOfSessions = [];
-    const listOfSessions = await AsyncStorage.getItem('savedSessions');
-    if (listOfSessions !== null) {
-      arrayOfSessions = JSON.parse(listOfSessions);
-      if (arrayOfSessions.indexOf(this.state.propertyId) == -1) {
-        arrayOfSessions.push(this.state.propertyId);
-        const arrayToAdd = JSON.stringify(arrayOfSessions);
-        await AsyncStorage.setItem('savedSessions', arrayToAdd);
-      }
-    } else {
-      arrayOfSessions = [this.state.propertyId];
-      await AsyncStorage.setItem('savedSessions', JSON.stringify(arrayOfSessions));  
-    }
-    this.setState({menuVisible: false});
-    Alert.alert(
-      'Form saved'
-    );
-  }
-
-  loadSessionStorage = async (sessionKey) => {
-    const stateKeys = Object.keys(this.state);
-    for (const key of stateKeys) {
-      this.setState({[key]: undefined});
-    }
-    this.setState(initialState);
-    this.setState({ loading: false });
-    const retrievedState = await AsyncStorage.getItem(sessionKey);
-    this.setState(JSON.parse(retrievedState));
-    this.setState({menuVisible: false});
-    this.setState({loadScreen: false});
-    Alert.alert(
-      'Form loaded'
-    );
-  }
-
-  switchLoadPage = async () => {
-    const listOfSessions = await AsyncStorage.getItem('savedSessions');
-    if (listOfSessions !== null) {
-      let arrayOfSessions = JSON.parse(listOfSessions);
-      this.setState({savedSessions: arrayOfSessions});
-    }
-    this.setState({loadScreen: !this.state.loadScreen});
-    this.setState({menuVisible: false});
-  }
-
   handleChange = (text) => (event) => {
-      this.setState({[text]: event.nativeEvent.text });
+    this.setState({[text]: event.nativeEvent.text });
   }
-  handlePicker = (name) => (event) => {
-    this.setState({[name]: event});
-  }
-  handleChoice = (name, value) => {
-    this.setState({[name]: value});
-  }
-  handleSignature = ({base64DataUrl}) => {
-    this.setState({signature: base64DataUrl});
-  }
-  handleImage = (name, value) => {
-    this.setState({
-      photos: {
-          ...this.state.photos,
-          [name]: value
-        }
-    });
-  }
-
-
-
  
   render() {
+    const { whichScreen } = this.state;
     const values = this.state;
-    const loadItems = this.state.savedSessions;
-
     if (this.state.loading) {
-      return <AppLoading />;
+      return (
+        <AppLoading />
+      );
     }
-
-    if (this.state.loadScreen) {
+    if (!this.state.user.isLoggedIn) {
       return (
         <View style={styles.container}>
-          <FormModalHeaderMenu 
-            isOpen={this.state.menuVisible}
-            logOut={this.logOutUser}
-            saveSession={this.saveSessionStorage}
-            loadSession={this.switchLoadPage}
-            setMenuVisible={this.setMenuVisible}
-          />
           <Header style={styles.header}>
             <Left />
             <Body>
               <Image style={styles.logo} source={require('./assets/cmm-logo.png')} />
             </Body>
-            <Right style={styles.headerRight}>
-              <Button style={styles.headerMenu}
-                onPress={() => {this.setMenuVisible(true)}}
-              >
-                <Icon 
-                  style={styles.headerMenuIcon}
-                  name='menu'
-                />
-              </Button>
-            </Right>
+            <Right/>
           </Header>
           <ScrollView>
-            <View style={styles.loadList}>
-              { loadItems.map((item, key)=>(
-                <View key={key} style={styles.loadListItem}>
-                  <Icon 
-                    style={styles.loadMenuIcon}
-                    name='upload'
-                    type='FontAwesome5'
-                  />
-                  <Text style={styles.loadListItemText} onPress={()=>{this.loadSessionStorage(item)}}> { item.toUpperCase() } </Text>
-                  <Text style={styles.loadListDeleteText} onPress={()=>{this.confirmRemoveSessionStorage(item)}}>Delete</Text>
-                </View>
-                )
-              )}
-            </View>
+            <FormLogin
+              handleChange={this.handleChange}
+              validate={this.validate}
+              values={values}
+              validating={values.validating}
+            />
           </ScrollView>
-          <View style={styles.backButtonContainer}>
-            <Text style={styles.backButton} onPress={()=>{this.switchLoadPage()}}>Close</Text>
-          </View>  
         </View>
       )
-    }
-
-    return (
-      <View style={styles.container}>
-        <FormModalHeaderMenu 
-          isOpen={this.state.menuVisible}
-          logOut={this.logOutUser}
-          saveSession={this.saveSessionStorage}
-          loadSession={this.switchLoadPage}
-          setMenuVisible={this.setMenuVisible}
-        />
-        
-        <Header style={styles.header}>
-          <Left />
-          <Body>
-            <Image style={styles.logo} source={require('./assets/cmm-logo.png')} />
-          </Body>
-          <Right style={styles.headerRight}>
-            <Button style={styles.headerMenu}
-              onPress={() => {this.setMenuVisible(true)}}
-            >
-              <Icon 
-                style={styles.headerMenuIcon}
-                name='menu'
-              />
-            </Button>
-          </Right>
-        </Header>
-
-        <ScrollView>
-          <UserForm 
-            key={this.state.loggedOut} 
-            values={values}
-            validate={this.validate}
-            isLoggedIn={this.state.user.isLoggedIn}
-            handleImage={this.handleImage}
-            handleChange={this.handleChange}
-            handlePicker={this.handlePicker}
-            handleChoice={this.handleChoice}
-            handleSignature={this.handleSignature}
-            handleFormSubmit={this.handleFormSubmit}
-          />
-        </ScrollView>
-      </View>
-    );
-  }
-
-
-
-
-  handleImageSubmit = async (post_id, base_url) => {
-    const phots = Object.entries(this.state.photos)
-    let uploadData = new FormData();
-    uploadData.append('type', 'formImages');
-    uploadData.append('propID', post_id);
-    uploadData.append('suAmount', this.state.suAmountOfSections);
-    uploadData.append('obsgAmount', this.state.obsgAmountOfSections);
-    uploadData.append('obstAmount', this.state.obstAmountOfSections);
-    uploadData.append('submit', 'ok');
-    uploadData.append('Content-Type', 'image/jpg');   
-    phots.forEach((item, i) => {
-      uploadData.append("files" + i, {
-        uri: item[1],
-        type: "image/jpg",
-        name: item[0] + '.jpg' || `filename${i}.jpg`,
-        filename: item[0] + '.jpg',
-      });
-    });
-
-    fetch(base_url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-      body: uploadData,
-    })
-    .then((response) => response.text())
-    .then((response) => {
-      if(response.status) {
-        this.setState({isUploading: false});
-        console.log(response.status);
-        Alert.alert(
-          'Form submitted',
-          response
-        );
-      } else {
-        this.setState({isUploading: false});
-        Alert.alert(
-          'Form submitted',
-          'Successfully uploaded'
-        );
-        console.log(response);
+    } else {
+      switch(whichScreen){
+        case 1:
+          return (
+            <View style={styles.container}>
+              <Header style={styles.header}>
+                <Left />
+                <Body>
+                  <Image style={styles.logo} source={require('./assets/cmm-logo.png')} />
+                </Body>
+                <Right/>
+              </Header>
+              <View style={styles.choiceButtonContainer}>
+                <Button block
+                  style={styles.choiceButton}
+                  onPress={() => {this.switchStep(2)}}
+                >
+                  <Text style={styles.choiceButtonText}>Moisture MOT</Text>
+                </Button>
+                 
+                <Button block
+                  style={styles.choiceButton}
+                  onPress={() => {this.switchStep(3)}}
+                >
+                  <Text style={styles.choiceButtonText}>Void</Text>
+                </Button>
+              </View>
+            </View>
+          )
+        case 2:
+          return (
+            <View style={styles.container}>
+              <ScrollView>
+                <MotApp 
+                  key={this.state.loggedOut}
+                  values={values}
+                  validate={this.validate}
+                  isLoggedIn={this.state.user.isLoggedIn}
+                  switchStep={this.switchStep}
+                  logOutUser={this.logOutUser}
+                  menuVisible={this.state.menuVisible}
+                />
+              </ScrollView>
+            </View>
+          )
+        case 3:
+          return (
+            <View style={styles.container}>
+              <ScrollView>
+                <VoidApp 
+                  key={this.state.loggedOut}
+                  values={values}
+                  validate={this.validate}
+                  isLoggedIn={this.state.user.isLoggedIn}
+                  switchStep={this.switchStep}
+                  logOutUser={this.logOutUser}
+                  menuVisible={this.state.menuVisible}
+                />
+              </ScrollView>
+            </View>
+          )
       }
-    }).catch((error) => {
-      this.setState({isUploading: false});
-    });
-  }
-
-  handleFormSubmit = async (image_uri) => {
-    let formDataComplete = this.state;
-    this.setState({isUploading: true});
-    let base_url = 'http://digital-dev.co.uk/cornerstone/form-submit/';
-    let formData = new FormData();
-    formData.append('type', 'formContent');
-    formData.append('data', JSON.stringify(formDataComplete));
-    let postId = "";
-    fetch(base_url, {
-      method: 'POST',
-      body: formData,
-      headers: new Headers({ 'Content-Type': 'application/x-www-form-urlencoded', }),
-    })
-    .then((response) => response.text())
-    .then((responseText) => {
-      postId = responseText;
-      this.handleImageSubmit(postId, base_url);
-    }).catch((error) => {});
+    }
   }
 }
 
 
+
+  
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -430,91 +245,19 @@ const styles = StyleSheet.create({
   headerMenuIcon: {
     color:'white',
   },
-  loadList: {
-    margin:30,
-  },
-  loadListItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingBottom:20,
-    marginBottom:20,
-    marginLeft:10,
-    borderBottomColor: "#ccc",
-    borderBottomWidth: 1,
-    borderStyle: "solid",
-  },
-  loadListItemText: {
-    marginLeft:20,
-    fontSize:18,
-    flex:1,
-  },
-  loadListDeleteText: {
-    color:'#FC0000',
-  },
-  loadMenuIcon: {
-    color:'#002163',
-    fontSize:20,
-  },
   logo: {
     width:122,
     height:36,
   },
-  menuModalContainer: {
-    alignItems:'flex-end',
-    justifyContent: 'flex-start',
-    height:'100%',
-    backgroundColor:'transparent'
+  choiceButtonContainer: {
+    padding:20,
   },
-  menuModal: {
-    backgroundColor: '#002163',
-    width:240,
-    height:240,
-    padding:15,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    marginRight:10,
-    marginTop:-1,
+  choiceButton: {
+    marginBottom: 20,
+    backgroundColor:'#002163',
   },
-  menuItems: {
-    padding:10,
-  },
-  menuItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  menuItemText: {
-    color: '#FFFFFF',
-    fontSize:20,
-  },
-  menuItemIcon: {
-    color: '#FFFFFF',
-    fontSize:16,
-    marginRight:20,
-  },
-  closeButton: {
-    height:30,
-    width:30,
-    alignItems:'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    alignSelf: 'flex-end',
-    lineHeight: 1,
-    padding:0,
-    marginRight:2,
-  },
-  closeButtonIcon: {
-    fontSize: 30,
-    color:'white',
-    marginTop: -1,
-  },
-  backButtonContainer:{
-    padding:10,
-    justifyContent: 'center',
-  },
-  backButton: {
-    justifyContent: 'center',
-    textAlign: 'center',
-    fontSize: 18,
-  },
+  choiceButtonText: {
+    color:'#FFFFFF',
+    fontSize:26,
+  }
 });

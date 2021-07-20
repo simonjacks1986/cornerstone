@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, TextInput } from 'react-native';
-import theme from '../assets/styles/common.js';
+import theme from '../../assets/styles/common.js';
 
-class CsBigInput extends Component {
+class CsMedInput extends Component {
   	render() {
   		const { values, handleChange, identifier, height } = this.props;
 	    return (
@@ -11,7 +11,7 @@ class CsBigInput extends Component {
 			  	onChange={ handleChange(identifier) }
 			  	value={values[identifier]}
 			  	multiline={true}
-			  	numberOfLines={5}			  	
+			  	numberOfLines={2}			  	
 			/>
 	    );
 	}
@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
 	input:{
 		backgroundColor: '#FFF',
 		width:'100%',
-		height:130,
+		height:60,
 		borderColor:theme.MEDIUM_GREY,
 		borderWidth:1,
 		marginTop:15,
@@ -29,4 +29,4 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default CsBigInput;
+export default CsMedInput;

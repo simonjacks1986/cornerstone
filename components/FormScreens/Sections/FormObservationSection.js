@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import CsAppText from '../../CsAppText';
-import CsAppLabel from '../../CsAppLabel';
-import CsAppTitle from '../../CsAppTitle';
-import CsInput from '../../CsInput';
-import FormModalCamera from '../Modal/FormModalCamera';
-import FormModalImage from '../Modal/FormModalImage';
 import { Picker, Icon } from "native-base";
+import CsAppText from '../../Parts/CsAppText';
+import CsAppLabel from '../../Parts/CsAppLabel';
+import CsAppTitle from '../../Parts/CsAppTitle';
+import CsInput from '../../Parts/CsInput';
+import FormModalCamera from '../../Modal/FormModalCamera';
+import FormModalImage from '../../Modal/FormModalImage';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
+import theme from '../../../assets/styles/common.js';
 
 class FormObservationSection extends Component {
   constructor(props) {
@@ -22,9 +26,29 @@ class FormObservationSection extends Component {
 	setModalCameraVisible = visible => this.setState({modalCameraVisible: visible});
   setModalImageVisible = visible => this.setState({modalImageVisible: visible});
   setWhichImage = which => this.setState({whichImage: which});
+  _pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: false,
+      quality: 1,
+    });
+
+    if (!result.cancelled) {
+      const manipResult = await ImageManipulator.manipulateAsync(
+          result.uri,
+          [{resize: { width: theme.compWidth }}],
+          { compress: theme.compression, format: ImageManipulator.SaveFormat.JPEG }
+        );
+        let saveResult = await MediaLibrary.createAssetAsync(manipResult.uri);
+
+      this.setState({ image: saveResult.uri });
+      const { handleImage } = this.props;
+      handleImage(this.state.whichImage, saveResult.uri);
+    }
+  };
 
 	render(){
-		const { values, iteration, handleChange, setWhichGrade, setWhichImage, handleColours, setModalVisible, handlePicker, data1, handleImage } = this.props;
+		const { values, iteration, handleChange, setWhichGrade, setWhichImage, handleColours, setModalVisible, handlePicker, data1, handleImage, removeImage } = this.props;
 		return(
 			<View style={styles.row}>
         <FormModalCamera 
@@ -38,6 +62,8 @@ class FormObservationSection extends Component {
           isOpen={this.state.modalImageVisible}
           setModalVisible={this.setModalImageVisible}
           imageUri={values.photos[this.state.whichImage]}
+          removeImage={removeImage}
+          identifier={this.state.whichImage}
         />
 
 				<View style={styles.rowFirst}>
@@ -89,6 +115,16 @@ class FormObservationSection extends Component {
               }
             >
               Take Photo</Text>
+            <Text 
+              style={styles.photoButton}
+              onPress={() => {
+                this.setWhichImage('obsImage' + iteration);
+                this._pickImage();
+                }
+              }
+            >
+              Pick Photo
+            </Text>
             { values.photos['obsImage' + iteration] && 
             <Text 
               style={styles.photoButton}
@@ -109,6 +145,7 @@ class FormObservationSection extends Component {
 					  	handleChange={handleChange}
 						  values={values}
 						  identifier={"obsComment" + iteration}
+              multiline={true}
 					  />
 				</View>
 				<View style={styles.rowThird}>
@@ -132,11 +169,7 @@ class FormObservationSection extends Component {
 	}
 }
 const styles = StyleSheet.create({
-  row: {
-    flex: 1,
-    flexDirection:'row',
-    marginBottom:20,
-  },
+  row: theme.ROW,
   rowFirst: {
   	flex:3,
   	margin:5
@@ -152,36 +185,11 @@ const styles = StyleSheet.create({
   	padding:0,
   	margin:0
   },
-  clickBox: {
-  	borderWidth:1,
-  	borderColor:'#DDDDDD',
-  	borderStyle:'solid',
-  	backgroundColor:'#fff',
-  	height:40,
-  	marginTop:15,
-  	padding:5
-  },
-  clickBoxWidth: {
-    width:40,
-  },
-  clickBoxRed: {
-  	backgroundColor: '#FC0000',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxOrange: {
-  	backgroundColor: '#FCC400',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxGreen: {
-  	backgroundColor: '#28A745',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
   photoRow : {
     flex:1,
     justifyContent: 'space-between',
@@ -195,14 +203,6 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     marginTop:5
   },
-  picker: {
-    backgroundColor: "#fff",
-    borderColor:'#DDDDDD',
-    borderWidth:1,
-    marginTop: 16,
-    borderRadius: 2,
-    marginBottom:10,
-    height:40
-  },
+  picker: theme.PICKER,
 });
 export default FormObservationSection;

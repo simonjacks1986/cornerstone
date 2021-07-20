@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import CsAppText from '../../CsAppText';
-import CsAppLabel from '../../CsAppLabel';
-import CsAppTitle from '../../CsAppTitle';
-import CsInput from '../../CsInput';
-import CsBigInput from '../../CsBigInput';
 import { Picker, Icon } from "native-base";
+import CsAppText from '../../Parts/CsAppText';
+import CsAppLabel from '../../Parts/CsAppLabel';
+import CsAppTitle from '../../Parts/CsAppTitle';
+import CsInput from '../../Parts/CsInput';
+import CsBigInput from '../../Parts/CsBigInput';
+import theme from '../../../assets/styles/common.js';
 
 class FormVentilationSection extends Component {
 	render(){
@@ -43,6 +44,7 @@ class FormVentilationSection extends Component {
                 selectedValue={values['venUnitLocation' + iteration]}
                 onValueChange={handlePicker('venUnitLocation' + iteration)}
             >
+                <Picker.Item label="Window" value="Window" />
                 <Picker.Item label="Internal Wall" value="Internal Wall" />
                 <Picker.Item label="Window Wall" value="Window Wall" />
                 <Picker.Item label="Ceiling" value="Ceiling" />
@@ -72,6 +74,25 @@ class FormVentilationSection extends Component {
             </Picker>
           </View> 
           <View style={styles.one2}>
+            <CsAppLabel>Flow device used</CsAppLabel>
+            <Picker
+                note
+                mode="dropdown"
+                style={styles.picker}
+                placeholder="- Select -"
+                iosIcon={<Icon name="arrow-down" />}
+                selectedValue={values['venFlowDevice' + iteration]}
+                onValueChange={handlePicker('venFlowDevice' + iteration)}
+            >
+                <Picker.Item label="Testo Anemometer" value="Testo Anemometer" />
+                <Picker.Item label="Airflow Hood" value="Airflow Hood" />
+                <Picker.Item label="Other Anemometer" value="Other Anemometer" />
+                <Picker.Item label="Other" value="Other" />
+            </Picker>
+          </View> 
+        </View>
+        <View style={styles.row}> 
+          <View style={styles.one2}>
             <CsAppLabel>Flow rate m/s</CsAppLabel>
             <CsInput
               handleChange={handleChange}
@@ -79,22 +100,12 @@ class FormVentilationSection extends Component {
               identifier={"venFlowRate" + iteration}
             />
           </View> 
-        </View> 
-        <View style={styles.row}>
           <View style={styles.one2}>
             <CsAppLabel>Overrun (mins)</CsAppLabel>
             <CsInput
               handleChange={handleChange}
               values={values}
               identifier={"venOverrun" + iteration}
-            />
-          </View> 
-          <View style={styles.one2}>
-            <CsAppLabel>Air changes in mins</CsAppLabel>
-            <CsInput
-              handleChange={handleChange}
-              values={values}
-              identifier={"venAirChanges" + iteration}
             />
           </View> 
         </View>
@@ -115,12 +126,14 @@ class FormVentilationSection extends Component {
                 <Picker.Item label="N/A" value="N/A" />
             </Picker>
           </View>
+          
           <View style={styles.one2}>
             <CsAppLabel>Comment</CsAppLabel>
             <CsInput
               handleChange={handleChange}
               values={values}
               identifier={"venComment" + iteration}
+              multiline={true}
             />
           </View>
           <View style={styles.oneEnd}>
@@ -166,54 +179,12 @@ const styles = StyleSheet.create({
   sectionBlock: {
     marginTop:20
   },
-  whiteBlock: {
-    backgroundColor:'#FFF',
-    borderColor:'#DDD',
-    borderWidth:2,
-    paddingLeft:10,
-    paddingRight:10,
-    paddingTop:20,
-    paddingBottom:20,
-    marginBottom:20,
-  },
-  clickBoxWidth: {
-    width:40,
-  },
-  clickBox: {
-    borderWidth:1,
-    borderColor:'#DDDDDD',
-    borderStyle:'solid',
-    backgroundColor:'#fff',
-    height:40,
-    marginTop:15,
-    padding:5
-  },
-  clickBoxRed: {
-    backgroundColor: '#FC0000',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
-  clickBoxOrange: {
-    backgroundColor: '#FCC400',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
-  clickBoxGreen: {
-    backgroundColor: '#28A745',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
-  picker: {
-    backgroundColor: "#fff",
-    borderColor:'#DDDDDD',
-    borderWidth:1,
-    marginTop: 16,
-    borderRadius: 2,
-    marginBottom:10,
-    height:40
-  },
+  whiteBlock: theme.WHITEBLOCK,
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
+  picker: theme.PICKER,
 });
 export default FormVentilationSection;

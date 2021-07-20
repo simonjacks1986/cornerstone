@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { TouchableHighlight, StyleSheet, View } from 'react-native';
-import CsAppText from '../../CsAppText';
-import CsAppLabel from '../../CsAppLabel';
-import CsAppTitle from '../../CsAppTitle';
-import CsInput from '../../CsInput';
-import CsBigInput from '../../CsBigInput';
+import CsAppText from '../../Parts/CsAppText';
+import CsAppLabel from '../../Parts/CsAppLabel';
+import CsAppTitle from '../../Parts/CsAppTitle';
+import CsInput from '../../Parts/CsInput';
+import CsBigInput from '../../Parts/CsBigInput';
 import { Picker, Icon, Button, Text } from "native-base";
+import theme from '../../../assets/styles/common.js';
 
 class FormInternalSection extends Component {
 	render(){
@@ -73,6 +74,7 @@ class FormInternalSection extends Component {
               handleChange={handleChange}
               values={values}
               identifier={"intComment" + iteration + section}
+              multiline={true}
             />
           </View>
           <View style={styles.oneEnd}>
@@ -177,6 +179,7 @@ class FormInternalSection extends Component {
               handleChange={handleChange}
               values={values}
               identifier={"intCommentFloor" + iteration}
+              multiline={true}
             />
           </View>
           <View style={styles.oneEnd}>
@@ -238,6 +241,7 @@ class FormInternalSection extends Component {
               handleChange={handleChange}
               values={values}
               identifier={"intCommentCeiling" + iteration}
+              multiline={true}
             />
           </View>
           <View style={styles.oneEnd}>
@@ -299,49 +303,15 @@ const styles = StyleSheet.create({
     paddingBottom:20,
     marginBottom:20,
   },
-  picker: {
-    padding:0,
-    margin:0,
-    backgroundColor: "#fff",
-    borderColor:'#DDDDDD',
-    borderWidth:1,
-    marginTop: 16,
-    borderRadius: 2,
-    height:40
-  },
+  picker: theme.PICKER,
   identifier: {
     fontSize:24,
     fontWeight:'bold',
   },
-  clickBox: {
-    borderWidth:1,
-    borderColor:'#DDDDDD',
-    borderStyle:'solid',
-    backgroundColor:'#fff',
-    height:40,
-    marginTop:15,
-    padding:5
-  },
-  clickBoxWidth: {
-    width:40,
-  },
-  clickBoxRed: {
-    backgroundColor: '#FC0000',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
-  clickBoxOrange: {
-    backgroundColor: '#FCC400',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
-  clickBoxGreen: {
-    backgroundColor: '#28A745',
-    width:'100%',
-    height:'100%',
-    borderRadius:3
-  },
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
 });
 export default FormInternalSection;

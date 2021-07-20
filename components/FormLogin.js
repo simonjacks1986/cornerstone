@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, ActivityIndicator } from 'react-native';
 import { Button, Text } from "native-base";
-import FormControls from './FormControls';
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
-import theme from '../../assets/styles/common.js';
+import FormControls from './Parts/FormControls';
+import CsAppText from './Parts/CsAppText';
+import CsAppLabel from './Parts/CsAppLabel';
+import CsAppTitle from './Parts/CsAppTitle';
+import CsInput from './Parts/CsInput';
+import theme from '../assets/styles/common.js';
 
 class FormLogin extends Component {
 	

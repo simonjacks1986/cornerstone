@@ -1,14 +1,19 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import FormControls from './FormControls';
-import { Picker, Icon } from "native-base";
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
-import FormModalColourPicker from './Modal/FormModalColourPicker';
-import FormModalCamera from './Modal/FormModalCamera';
-import FormModalImage from './Modal/FormModalImage';
+import { TouchableHighlight, StyleSheet, View, Text, ScrollView } from 'react-native';
+import { Picker, Icon, Container } from "native-base";
+import FormControls from '../Parts/FormControls';
+import CsAppText from '../Parts/CsAppText';
+import CsAppLabel from '../Parts/CsAppLabel';
+import CsAppTitle from '../Parts/CsAppTitle';
+import CsInput from '../Parts/CsInput';
+import FormModalColourPicker from '../Modal/FormModalColourPicker';
+import FormModalCamera from '../Modal/FormModalCamera';
+import FormModalImage from '../Modal/FormModalImage';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
+import theme from '../../assets/styles/common.js';
+
 
 class FormRainwaterManagement extends Component {
 	constructor(props) {
@@ -32,329 +37,392 @@ class FormRainwaterManagement extends Component {
 		handleColourChoice('rmGrade' + this.state.whichGrade, which);
 		this.setModalColourVisible(!this.state.modalColourVisible);
 	}
+	_pickImage = async () => {
+	    let result = await ImagePicker.launchImageLibraryAsync({
+	      mediaTypes: ImagePicker.MediaTypeOptions.All,
+	      allowsEditing: false,
+	      quality: 1,
+	    });
+
+	    if (!result.cancelled) {
+	    	const manipResult = await ImageManipulator.manipulateAsync(
+		      result.uri,
+		      [{resize: { width: theme.compWidth }}],
+          { compress: theme.compression, format: ImageManipulator.SaveFormat.JPEG }
+		    );
+		    let saveResult = await MediaLibrary.createAssetAsync(manipResult.uri);
+
+			this.setState({ image: saveResult.uri });
+			const { handleImage } = this.props;
+			handleImage(this.state.whichImage, saveResult.uri);
+	    }
+	};
 
 	render(){
-		const { values, handleChange, handleImage, handlePicker } = this.props;
+		const { values, handleChange, handleImage, handlePicker, removeImage } = this.props;
 		return(
-			<View style={styles.container}>
-				<FormModalColourPicker
-					isOpen={this.state.modalColourVisible}
-					setModalVisible={this.setModalColourVisible}
-					handleColours={this.handleColours}
-				/>
+			<Container style={styles.container}>
+				<ScrollView>
+					<FormModalColourPicker
+						isOpen={this.state.modalColourVisible}
+						setModalVisible={this.setModalColourVisible}
+						handleColours={this.handleColours}
+					/>
 
-				<FormModalImage
-					isOpen={this.state.modalImageVisible}
-					setModalVisible={this.setModalImageVisible}
-					imageUri={values.photos[this.state.whichImage]}
-				/>
+					<FormModalImage
+						isOpen={this.state.modalImageVisible}
+						setModalVisible={this.setModalImageVisible}
+						imageUri={values.photos[this.state.whichImage]}
+						removeImage={removeImage}
+	          			identifier={this.state.whichImage}
+					/>
+					
+					<FormModalCamera 
+						isOpen={this.state.modalCameraVisible}
+						setModalCameraVisible={this.setModalCameraVisible}
+						handleImage={handleImage}
+						identifier={this.state.whichImage}
+					/>
+
+					<CsAppTitle>2.1 Rainwater Management</CsAppTitle>
+					<CsAppText>Enter the survey details below.</CsAppText>
+					<View>
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Roof</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.rmRoof}
+						            onValueChange={handlePicker('rmRoof')}
+						        >
+						            <Picker.Item label="Tile" value="Tile" />
+						            <Picker.Item label="Slate" value="Slate" />
+						            <Picker.Item label="Flat" value="Flat" />
+						            <Picker.Item label="Corrugated" value="Corrugated" />
+						            <Picker.Item label="Clad" value="Clad" />
+						            <Picker.Item label="Standard Pitched" value="Standard Pitched" />
+						            <Picker.Item label="Mono" value="Mono" />
+						            <Picker.Item label="Butterfly" value="Butterfly" />
+						            <Picker.Item label="Mansard" value="Mansard" />
+						            <Picker.Item label="N/A" value="N/A" />
+						        </Picker>
+						        <View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmRoof');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.rmRoof && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmRoof');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('rmRoof');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+							<View style={styles.rowSecond}>
+								<CsAppLabel>Comment</CsAppLabel>
+							    <CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="rmComment1"
+									multiline={true}
+								/>
+							</View>
+							<View style={styles.rowThird}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(1);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.rmGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.rmGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.rmGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Gutters</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.rmGutters}
+						            onValueChange={handlePicker('rmGutters')}
+						        >
+						            <Picker.Item label="uPVC" value="uPVC" />
+						            <Picker.Item label="Composite" value="" />
+						            <Picker.Item label="Metal" value="Metal" />
+						            <Picker.Item label="Asbestos" value="Asbestos" />
+						            <Picker.Item label="N/A" value="N/A" />
+						        </Picker>
+						        <View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmGutters');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.rmGutters && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmGutters');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('rmGutters');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+							<View style={styles.rowSecond}>
+								<CsAppLabel>Comment</CsAppLabel>
+								<CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="rmComment2"
+									multiline={true}
+								/>
+							</View>
+							<View style={styles.rowThird}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(2);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.rmGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.rmGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.rmGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Downpipes</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.rmPipes}
+						            onValueChange={handlePicker('rmPipes')}
+						        >
+						            <Picker.Item label="uPVC" value="uPVC" />
+						            <Picker.Item label="Composite" value="" />
+						            <Picker.Item label="Metal" value="Metal" />
+						            <Picker.Item label="Asbestos" value="Asbestos" />
+						            <Picker.Item label="N/A" value="N/A" />
+						        </Picker>
+						        <View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmPipes');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.rmPipes && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmPipes');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('rmPipes');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+							<View style={styles.rowSecond}>
+								<CsAppLabel>Comment</CsAppLabel>
+								<CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="rmComment3"
+									multiline={true}
+								/>
+							</View>
+							<View style={styles.rowThird}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(3);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.rmGrade3 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.rmGrade3 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.rmGrade3 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Hoppers</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.rmHoppers}
+						            onValueChange={handlePicker('rmHoppers')}
+						        >
+						            <Picker.Item label="uPVC" value="uPVC" />
+						            <Picker.Item label="Composite" value="" />
+						            <Picker.Item label="Metal" value="Metal" />
+						            <Picker.Item label="Asbestos" value="Asbestos" />
+						            <Picker.Item label="N/A" value="N/A" />
+						        </Picker>
+						        <View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmHoppers');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.rmHoppers && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmHoppers');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('rmHoppers');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+							<View style={styles.rowSecond}>
+								<CsAppLabel>Comment</CsAppLabel>
+								<CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="rmComment4"
+									multiline={true}
+								/>
+							</View>
+							<View style={styles.rowThird}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(4);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.rmGrade4 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.rmGrade4 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.rmGrade4 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+					</View>
+				</ScrollView>
 				
-				<FormModalCamera 
-					isOpen={this.state.modalCameraVisible}
-					setModalCameraVisible={this.setModalCameraVisible}
-					handleImage={handleImage}
-					identifier={this.state.whichImage}
-				/>
-
-				<CsAppTitle>2.1 Rainwater Management</CsAppTitle>
-				<CsAppText>Enter the survey details below.</CsAppText>
-				<View>
-
-					<View style={styles.row}>
-						<View style={styles.rowFirst}>
-							<CsAppLabel>Roof</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.rmRoof}
-					            onValueChange={handlePicker('rmRoof')}
-					        >
-					            <Picker.Item label="Tile" value="Tile" />
-					            <Picker.Item label="Slate" value="Slate" />
-					            <Picker.Item label="Flat" value="Flat" />
-					            <Picker.Item label="Corrugated" value="Corrugated" />
-					            <Picker.Item label="Clad" value="Clad" />
-					            <Picker.Item label="Standard Pitched" value="Standard Pitched" />
-					            <Picker.Item label="Mono" value="Mono" />
-					            <Picker.Item label="Butterfly" value="Butterfly" />
-					            <Picker.Item label="Mansard" value="Mansard" />
-					            <Picker.Item label="N/A" value="N/A" />
-					        </Picker>
-					        <View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmRoof');
-										this.setModalCameraVisible(true);
-						    			}
-									}
-								>
-									Take Photo</Text>
-								{ values.photos.rmRoof && 
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmRoof');
-										this.setModalImageVisible(true);
-						    			}
-									}
-								>
-									View Photo
-								</Text>
-								}
-							</View>
-						</View>
-						<View style={styles.rowSecond}>
-							<CsAppLabel>Comment</CsAppLabel>
-						    <CsInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="rmComment1"
-							/>
-						</View>
-						<View style={styles.rowThird}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(1);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.rmGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.rmGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.rmGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-
-					<View style={styles.row}>
-						<View style={styles.rowFirst}>
-							<CsAppLabel>Gutters</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.rmGutters}
-					            onValueChange={handlePicker('rmGutters')}
-					        >
-					            <Picker.Item label="uPVC" value="uPVC" />
-					            <Picker.Item label="Composite" value="" />
-					            <Picker.Item label="Metal" value="Metal" />
-					            <Picker.Item label="Asbestos" value="Asbestos" />
-					            <Picker.Item label="N/A" value="N/A" />
-					        </Picker>
-					        <View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmGutters');
-										this.setModalCameraVisible(true);
-						    			}
-									}
-								>
-									Take Photo</Text>
-								{ values.photos.rmGutters && 
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmGutters');
-										this.setModalImageVisible(true);
-						    			}
-									}
-								>
-									View Photo
-								</Text>
-								}
-							</View>
-						</View>
-						<View style={styles.rowSecond}>
-							<CsAppLabel>Comment</CsAppLabel>
-							<CsInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="rmComment2"
-							/>
-						</View>
-						<View style={styles.rowThird}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(2);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.rmGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.rmGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.rmGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-
-					<View style={styles.row}>
-						<View style={styles.rowFirst}>
-							<CsAppLabel>Downpipes</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.rmPipes}
-					            onValueChange={handlePicker('rmPipes')}
-					        >
-					            <Picker.Item label="uPVC" value="uPVC" />
-					            <Picker.Item label="Composite" value="" />
-					            <Picker.Item label="Metal" value="Metal" />
-					            <Picker.Item label="Asbestos" value="Asbestos" />
-					            <Picker.Item label="N/A" value="N/A" />
-					        </Picker>
-					        <View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmPipes');
-										this.setModalCameraVisible(true);
-						    			}
-									}
-								>
-									Take Photo</Text>
-								{ values.photos.rmPipes && 
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmPipes');
-										this.setModalImageVisible(true);
-						    			}
-									}
-								>
-									View Photo
-								</Text>
-								}
-							</View>
-						</View>
-						<View style={styles.rowSecond}>
-							<CsAppLabel>Comment</CsAppLabel>
-							<CsInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="rmComment3"
-							/>
-						</View>
-						<View style={styles.rowThird}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(3);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.rmGrade3 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.rmGrade3 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.rmGrade3 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-
-					<View style={styles.row}>
-						<View style={styles.rowFirst}>
-							<CsAppLabel>Hoppers</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.rmHoppers}
-					            onValueChange={handlePicker('rmHoppers')}
-					        >
-					            <Picker.Item label="uPVC" value="uPVC" />
-					            <Picker.Item label="Composite" value="" />
-					            <Picker.Item label="Metal" value="Metal" />
-					            <Picker.Item label="Asbestos" value="Asbestos" />
-					            <Picker.Item label="N/A" value="N/A" />
-					        </Picker>
-					        <View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmHoppers');
-										this.setModalCameraVisible(true);
-						    			}
-									}
-								>
-									Take Photo</Text>
-								{ values.photos.rmHoppers && 
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('rmHoppers');
-										this.setModalImageVisible(true);
-						    			}
-									}
-								>
-									View Photo
-								</Text>
-								}
-							</View>
-						</View>
-						<View style={styles.rowSecond}>
-							<CsAppLabel>Comment</CsAppLabel>
-							<CsInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="rmComment4"
-							/>
-						</View>
-						<View style={styles.rowThird}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(4);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.rmGrade4 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.rmGrade4 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.rmGrade4 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-				</View>
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
 				/>
-			</View>
+					
+			</Container>
 		)
 	}
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding:20,
-  },
-  row: {
-    flex: 1,
-    flexDirection:'row',
-    marginBottom:20,
-  },
+  container: theme.CONTAINER,
+  row: theme.ROW,
   rowFirst: {
   	flex:3,
   	margin:5
@@ -370,36 +438,11 @@ const styles = StyleSheet.create({
   	fontSize: 24,
   	fontWeight: 'bold',
   },
-  clickBoxWidth: {
-  	width:40,
-  },
-  clickBox: {
-  	borderWidth:1,
-  	borderColor:'#DDDDDD',
-  	borderStyle:'solid',
-  	backgroundColor:'#fff',
-  	height:40,
-  	marginTop:15,
-  	padding:5
-  },
-  clickBoxRed: {
-  	backgroundColor: '#FC0000',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxOrange: {
-  	backgroundColor: '#FCC400',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxGreen: {
-  	backgroundColor: '#28A745',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
   photoRow : {
   	flex:1,
   	justifyContent: 'space-between',
@@ -412,14 +455,6 @@ const styles = StyleSheet.create({
   	color: '#2187FF',
   	textDecorationLine: 'underline',
   },
-  picker: {
-  	backgroundColor: "#fff",
-  	borderColor:'#DDDDDD',
-  	borderWidth:1,
-  	marginTop: 16,
-  	borderRadius: 2,
-  	marginBottom:10,
-  	height:40
-  },
+  picker: theme.PICKER,
 });
 export default FormRainwaterManagement;

@@ -1,15 +1,19 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, StyleSheet, View, Text, Image } from 'react-native';
-import FormControls from './FormControls';
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
-import CsBigInput from '../CsBigInput';
-import FormModalColourPicker from './Modal/FormModalColourPicker';
-import FormModalCamera from './Modal/FormModalCamera';
-import FormModalImage from './Modal/FormModalImage';
-import { Picker, Icon } from "native-base";
+import { TouchableHighlight, StyleSheet, View, Text, Image, ScrollView } from 'react-native';
+import { Picker, Icon, Container } from "native-base";
+import FormControls from '../Parts/FormControls';
+import CsAppText from '../Parts/CsAppText';
+import CsAppLabel from '../Parts/CsAppLabel';
+import CsAppTitle from '../Parts/CsAppTitle';
+import CsInput from '../Parts/CsInput';
+import CsBigInput from '../Parts/CsBigInput';
+import FormModalColourPicker from '../Modal/FormModalColourPicker';
+import FormModalCamera from '../Modal/FormModalCamera';
+import FormModalImage from '../Modal/FormModalImage';
+import * as ImagePicker from 'expo-image-picker';
+import * as MediaLibrary from 'expo-media-library';
+import * as ImageManipulator from 'expo-image-manipulator';
+import theme from '../../assets/styles/common.js';
 
 class FormInsulations extends Component {
 	constructor(props) {
@@ -35,268 +39,304 @@ class FormInsulations extends Component {
 		handleColourChoice('insGrade' + this.state.whichGrade, which);
 		this.setModalColourVisible(!this.state.modalColourVisible);
 	}
+	_pickImage = async () => {
+	    let result = await ImagePicker.launchImageLibraryAsync({
+	      mediaTypes: ImagePicker.MediaTypeOptions.All,
+	      allowsEditing: false,
+	      quality: 1,
+	    });
+
+	    if (!result.cancelled) {
+	    	const manipResult = await ImageManipulator.manipulateAsync(
+		      result.uri,
+		      [{resize: { width: theme.compWidth }}],
+          	  { compress: theme.compression, format: ImageManipulator.SaveFormat.JPEG }
+		    );
+		    let saveResult = await MediaLibrary.createAssetAsync(manipResult.uri);
+
+			this.setState({ image: saveResult.uri });
+			const { handleImage } = this.props;
+			handleImage(this.state.whichImage, saveResult.uri);
+	    }
+	};
 
 	render(){
 		const values2 = this.state;
-		const { values, handleTickBox, handleChange, handlePicker, handleImage } = this.props;
+		const { values, handleTickBox, handleChange, handlePicker, handleImage, removeImage } = this.props;
 
 		const items = [];		
 		return(
-			<View style={styles.container}>
-				<FormModalColourPicker
-					isOpen={this.state.modalColourVisible}
-					setModalVisible={this.setModalColourVisible}
-					handleColours={this.handleColours}
-				/>
+			<Container style={styles.container}>
+				<ScrollView>
+					<FormModalColourPicker
+						isOpen={this.state.modalColourVisible}
+						setModalVisible={this.setModalColourVisible}
+						handleColours={this.handleColours}
+					/>
 
-				<FormModalImage
-					isOpen={this.state.modalImageVisible}
-					setModalVisible={this.setModalImageVisible}
-					imageUri={values.photos[this.state.whichImage]}
-				/>
-				
-				<FormModalCamera 
-					isOpen={this.state.modalCameraVisible}
-					setModalCameraVisible={this.setModalCameraVisible}
-					handleImage={handleImage}
-					identifier={this.state.whichImage}
-				/>
+					<FormModalImage
+						isOpen={this.state.modalImageVisible}
+						setModalVisible={this.setModalImageVisible}
+						imageUri={values.photos[this.state.whichImage]}
+						removeImage={removeImage}
+	          			identifier={this.state.whichImage}
+					/>
+					
+					<FormModalCamera 
+						isOpen={this.state.modalCameraVisible}
+						setModalCameraVisible={this.setModalCameraVisible}
+						handleImage={handleImage}
+						identifier={this.state.whichImage}
+					/>
 
-				<CsAppTitle>5.0 Insulations</CsAppTitle>
-				<CsAppText>Enter the survey details below</CsAppText>
-				
-				<View style={styles.spacer}>
-					<View style={styles.row}>
-						<View style={styles.rowFull}>
-							<Text>Loft insulations</Text>
-						</View>
-					</View>
-					<View style={styles.row}>
-						<View style={styles.row1}>
-							<CsAppLabel>Yes</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									handleTickBox('insLoft', 1)
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insLoft == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-						<View style={styles.row1}>
-							<CsAppLabel>No</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									handleTickBox('insLoft', 0)
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insLoft == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-						<View style={styles.rowFull}>
-							<CsAppLabel>Condition</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.insCoverage1}
-					            onValueChange={handlePicker('insCoverage1')}
-					        >
-					            <Picker.Item label="Complete" value="Complete" />
-					            <Picker.Item label="Incomplete" value="Incomplete" />
-					            <Picker.Item label="Unknown" value="Unknown" />
-					            <Picker.Item label="None" value="None" />
-					            <Picker.Item label="N/A" value="Option" />
-					            
-					        </Picker>
-						</View>
-						<View style={styles.rowFull}>
-							<CsAppLabel>Depth (mm)</CsAppLabel>
-							<CsInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="insDepth"
-							/>
-						</View>
-						<View style={styles.row1}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(1);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.insGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.insGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-					<View style={styles.row}>
-						<View style={styles.rowFull}>
-							<CsAppLabel>Comment</CsAppLabel>
-							<CsBigInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="insDescription"
-							/>
-							<View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('insDescriptionImage');
-										this.setModalCameraVisible(true);
-						    			}
-									}
-								>
-									Take Photo</Text>
-								{ values.photos.insDescriptionImage && 
-								<Text 
-									style={styles.photoButton}
-									onPress={() => {
-						    			this.setWhichImage('insDescriptionImage');
-										this.setModalImageVisible(true);
-						    			}
-									}
-								>
-									View Photo
-								</Text>
-								}
+					<CsAppTitle>5.0 Insulations</CsAppTitle>
+					<CsAppText>Enter the survey details below</CsAppText>
+					
+					<View style={styles.spacer}>
+						<View style={styles.row}>
+							<View style={styles.rowFull}>
+								<Text>Loft insulations</Text>
 							</View>
 						</View>
-					</View>
-				</View>	
-
-
-				<View style={styles.spacer}>
-					<View style={styles.row}>
-						<View style={styles.rowFull}>
-							<Text>Other</Text>
-						</View>
-					</View>
-					<View style={styles.row}>
-						<View style={styles.row1}>
-							<CsAppLabel>Yes</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									handleTickBox('insOther', 1)
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insOther == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-						<View style={styles.row1}>
-							<CsAppLabel>No</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									handleTickBox('insOther', 0)
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insOther == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-						<View style={styles.rowFull}>
-							<CsAppLabel>Condition</CsAppLabel>
-							<Picker
-					            note
-					            mode="dropdown"
-					            style={styles.picker}
-					            placeholder="- Select -"
-					            iosIcon={<Icon name="arrow-down" />}
-					            selectedValue={values.insCoverage2}
-					            onValueChange={handlePicker('insCoverage2')}
-					        >
-					        	<Picker.Item label="None" value="None" />
-					            <Picker.Item label="Unknown" value="Unknown" />
-					            <Picker.Item label="N/A" value="Option" />
-					        </Picker>
-						</View>
-						<View style={styles.row1}>
-							<CsAppLabel>Grade</CsAppLabel>
-							<TouchableHighlight
-								style={styles.clickBoxWidth}
-								onPress={() => {
-									this.setModalColourVisible(true);
-									this.setWhichGrade(2);
-								}}
-							>
-								<View style={styles.clickBox}>
-									{ (values.insGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
-									{ (values.insGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
-									{ (values.insGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
-								</View>
-							</TouchableHighlight>
-						</View>
-					</View>
-					<View style={styles.row}>
-						<View style={styles.rowFull}>
-							<CsAppLabel>Comment</CsAppLabel>
-							<CsBigInput
-							  	handleChange={handleChange}
-								values={values}
-								identifier="insDescription2"
-							/>
-							<View style={styles.photoRow}>
-								<Text 
-									style={styles.photoButton}
+						<View style={styles.row}>
+							<View style={styles.row1}>
+								<CsAppLabel>Yes</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
 									onPress={() => {
-						    			this.setWhichImage('insDescriptionImage2');
-										this.setModalCameraVisible(true);
-						    			}
-									}
+										handleTickBox('insLoft', 1)
+									}}
 								>
-									Take Photo</Text>
-								{ values.photos.insDescriptionImage2 && 
-								<Text 
-									style={styles.photoButton}
+									<View style={styles.clickBox}>
+										{ (values.insLoft == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+							<View style={styles.row1}>
+								<CsAppLabel>No</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
 									onPress={() => {
-						    			this.setWhichImage('insDescriptionImage2');
-										this.setModalImageVisible(true);
-						    			}
-									}
+										handleTickBox('insLoft', 0)
+									}}
 								>
-									View Photo
-								</Text>
-								}
+									<View style={styles.clickBox}>
+										{ (values.insLoft == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+							<View style={styles.rowFull}>
+								<CsAppLabel>Condition</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.insCoverage1}
+						            onValueChange={handlePicker('insCoverage1')}
+						        >
+						            <Picker.Item label="Complete" value="Complete" />
+						            <Picker.Item label="Incomplete" value="Incomplete" />
+						            <Picker.Item label="Unknown" value="Unknown" />
+						            <Picker.Item label="None" value="None" />
+						            <Picker.Item label="N/A" value="Option" />
+						            
+						        </Picker>
+							</View>
+							<View style={styles.rowFull}>
+								<CsAppLabel>Depth (mm)</CsAppLabel>
+								<CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="insDepth"
+								/>
+							</View>
+							<View style={styles.row1}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(1);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.insGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.insGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.insGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
 							</View>
 						</View>
-					</View>
-				</View>	
+						<View style={styles.row}>
+							<View style={styles.rowFull}>
+								<CsAppLabel>Comment</CsAppLabel>
+								<CsBigInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="insDescription"
+								/>
+								<View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('insDescriptionImage');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.insDescriptionImage && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('insDescriptionImage');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('insDescriptionImage');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+						</View>
+					</View>	
 
+
+					<View style={styles.spacer}>
+						<View style={styles.row}>
+							<View style={styles.rowFull}>
+								<Text>Other</Text>
+							</View>
+						</View>
+						<View style={styles.row}>
+							<View style={styles.row1}>
+								<CsAppLabel>Yes</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										handleTickBox('insOther', 1)
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.insOther == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+							<View style={styles.row1}>
+								<CsAppLabel>No</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										handleTickBox('insOther', 0)
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.insOther == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+							<View style={styles.rowFull}>
+								<CsAppLabel>Condition</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.insCoverage2}
+						            onValueChange={handlePicker('insCoverage2')}
+						        >
+						        	<Picker.Item label="None" value="None" />
+						            <Picker.Item label="Unknown" value="Unknown" />
+						            <Picker.Item label="N/A" value="Option" />
+						        </Picker>
+							</View>
+							<View style={styles.row1}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(2);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.insGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.insGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.insGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+						<View style={styles.row}>
+							<View style={styles.rowFull}>
+								<CsAppLabel>Comment</CsAppLabel>
+								<CsBigInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="insDescription2"
+								/>
+								<View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('insDescriptionImage2');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.insDescriptionImage2 && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('insDescriptionImage2');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('insDescriptionImage2');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+						</View>
+					</View>	
+				</ScrollView>
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
 				/>
-			</View>
+			</Container>
 		)
 	}
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding:20,
-  },
-  row: {
-    flex: 1,
-    flexDirection:'row',
-    marginBottom:20,
-  },
+  container: theme.CONTAINER,
+  row: theme.ROW,
   row1: {
   	margin:5
   },
@@ -335,47 +375,12 @@ const styles = StyleSheet.create({
   	fontSize: 24,
   	fontWeight: 'bold',
   },
-  clickBoxWidth: {
-  	width:40,
-  },
-  clickBox: {
-  	borderWidth:1,
-  	borderColor:'#DDDDDD',
-  	borderStyle:'solid',
-  	backgroundColor:'#fff',
-  	height:40,
-  	marginTop:15,
-  	padding:5,
-  	alignItems: 'center',
-  	justifyContent: 'center',
-  },
-  clickBoxRed: {
-  	backgroundColor: '#FC0000',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxOrange: {
-  	backgroundColor: '#FCC400',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxGreen: {
-  	backgroundColor: '#28A745',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  picker: {
-    backgroundColor: "#fff",
-    borderColor:'#DDDDDD',
-    borderWidth:1,
-    marginTop: 16,
-    borderRadius: 2,
-    marginBottom:10,
-    height:40
-  },
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
+  picker: theme.PICKER,
   photoRow : {
   	flex:1,
   	justifyContent: 'space-between',

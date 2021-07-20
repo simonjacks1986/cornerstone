@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, StyleSheet, View, Image } from 'react-native';
-import FormControls from './FormControls';
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
+import { TouchableHighlight, StyleSheet, View, Image, ScrollView } from 'react-native';
+import { Button, Text, Container } from "native-base";
+import FormControls from '../Parts/FormControls';
+import CsAppText from '../Parts/CsAppText';
+import CsAppLabel from '../Parts/CsAppLabel';
+import CsAppTitle from '../Parts/CsAppTitle';
+import CsInput from '../Parts/CsInput';
 import FormGradeSection from './Sections/FormGradeSection';
-import FormModalColourPicker from './Modal/FormModalColourPicker';
-import { Button, Text } from "native-base";
+import FormModalColourPicker from '../Modal/FormModalColourPicker';
+import theme from '../../assets/styles/common.js';
 
 class FormSupportingInformationExterior extends Component {
 	constructor(props) {
@@ -25,10 +26,13 @@ class FormSupportingInformationExterior extends Component {
 
 	setAdditionalSections(amount){
 		let incrementAmount = this.state.additionalSections;
-		this.setState({additionalSections: incrementAmount + 1});
-	    const { handleColourChoice } = this.props;
-	    handleColourChoice('suAmountOfSections', this.state.additionalSections + 1);
+		if(incrementAmount + amount >= 0) {
+			this.setState({additionalSections: incrementAmount + amount});
+		    const { handleColourChoice } = this.props;
+		    handleColourChoice('suAmountOfSections', this.state.additionalSections + amount);
+		}
 	}
+	
 	handleColours = which => {
 		const { handleColourChoice } = this.props;
 		handleColourChoice('suGrade' + this.state.whichGrade, which);
@@ -39,7 +43,7 @@ class FormSupportingInformationExterior extends Component {
 		const values2 = this.state;
 		let loopCount = 1;
 		
-		const { values, handleChange, handleTickBox, handlePicker, handleImage } = this.props;
+		const { values, handleChange, handleTickBox, handlePicker, handleImage, removeImage } = this.props;
 		const items = [];
 
 		for (var i = 1; i <= this.state.additionalSections; i++) {
@@ -55,57 +59,67 @@ class FormSupportingInformationExterior extends Component {
 				setModalVisible={this.setModalColourVisible}
 				setWhichGrade={this.setWhichGrade}
 				setWhichImage={this.setWhichImage}
+				removeImage={removeImage}
 			/>)
 		}
 		return(
-			<View style={styles.container}>
-				<FormModalColourPicker
-					isOpen={this.state.modalColourVisible}
-					setModalVisible={this.setModalColourVisible}
-					handleColours={this.handleColours}
-				/>
+			<Container style={styles.container}>
+				<ScrollView>
+					<FormModalColourPicker
+						isOpen={this.state.modalColourVisible}
+						setModalVisible={this.setModalColourVisible}
+						handleColours={this.handleColours}
+					/>
 
-				<CsAppTitle>2.2 Supporting Information Exterior</CsAppTitle>
-				<CsAppText>Enter the survey details below.</CsAppText>
-				<View>
-					{items}
+					<CsAppTitle>2.2 Supporting Information Exterior</CsAppTitle>
+					<CsAppText>Enter the survey details below.</CsAppText>
 					<View>
-						<Button
-							style={styles.addButtton}
-							onPress={() => { this.setAdditionalSections(1) }}
-						>
-							<Text style={styles.addButttonText}>Add another section +</Text>
-						</Button>
-						<Text style={styles.red}>Please note:</Text>
-						<Text>Before entering the property, place a hygrometer/sensor outside to record external atmospheric conditions. The device is NOT to be placed in direct sunlight or where it can be affected by rainfall. Readings from the device are to be collected upon completion of the internal survey.</Text>              
-					</View>
-					<View style={styles.confirmLabel}>
-					 	<CsAppLabel>Confirm</CsAppLabel>
-						<TouchableHighlight
-							style={styles.confirmBoxWidth}
-							onPress={() => {
-							  handleTickBox('supConfirm', 1)
-							}}
-						>
-						<View style={styles.clickBox}>
-						  	{ (values.supConfirm == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
+						{items}
+						<View>
+							<View style={styles.addButttonContainer}>
+								<Button
+									style={styles.addButtton}
+									onPress={() => { this.setAdditionalSections(1) }}
+								>
+									<Text style={styles.addButttonText}>Add another section +</Text>
+								</Button>
+								<Button
+									style={styles.addButtton}
+									onPress={() => { this.setAdditionalSections(-1) }}
+								>
+									<Text style={styles.addButttonText}>Remove section -</Text>
+								</Button>
+							</View>
+							<Text style={styles.red}>Please note:</Text>
+							<Text>Before entering the property, place a hygrometer/sensor outside to record external atmospheric conditions. The device is NOT to be placed in direct sunlight or where it can be affected by rainfall. Readings from the device are to be collected upon completion of the internal survey.</Text>              
 						</View>
-						</TouchableHighlight>
+						<View style={styles.confirmLabel}>
+						 	<CsAppLabel>Confirm</CsAppLabel>
+							<TouchableHighlight
+								style={styles.confirmBoxWidth}
+								onPress={() => {
+								  handleTickBox('supConfirm', 1)
+								}}
+							>
+							<View style={styles.clickBox}>
+							  	{ (values.supConfirm == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
+							</View>
+							</TouchableHighlight>
+						</View>
 					</View>
-				</View>
+				</ScrollView>
+				
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
 				/>
-			</View>
+
+			</Container>
 		)
 	}
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding:20,
-  },
+  container: theme.CONTAINER,
   red: {
   	color:'#FC0000',
   	marginBottom: 10,
@@ -121,14 +135,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  addButttonContainer: {
+  	marginBottom:40,
+  	marginTop:20,
+  	justifyContent: 'space-between',
+  	flexDirection: 'row'
+  },
   addButtton: {
   	backgroundColor: '#E5E5E5',
   	width:220,
   	justifyContent: 'center',
   	borderRadius:3,
   	height:48,
-  	marginTop:20,
-  	marginBottom:40,
   },
   addButttonText: {
   	color:'#122F45',

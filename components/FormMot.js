@@ -14,8 +14,7 @@ import FormObservationsGeneral from './FormScreens/FormObservationsGeneral';
 import FormObservationsThermal from './FormScreens/FormObservationsThermal';
 import FormAtmospherics from './FormScreens/FormAtmospherics';
 import FormAdvisories from './FormScreens/FormAdvisories';
-import FormLogin from './FormScreens/FormLogin';
-import FormModalHeaderMenu from './FormScreens/Modal/FormModalHeaderMenu';
+import FormModalHeaderMenu from './Modal/FormModalHeaderMenu';
 
 class UserForm extends Component {
 	constructor(props) {
@@ -36,18 +35,9 @@ class UserForm extends Component {
 
 	render(){
 		const { step } = this.state;
-		const {values, isLoggedIn, handleChange, validate, handlePicker, handleImage, handleChoice, handleSignature, handleFormSubmit, handleSetDate } = this.props;
+		const {values, handleChange, validate, handlePicker, handleImage, handleChoice, handleSignature, handleFormSubmit, handleSetDate, removeImage, compressImages } = this.props;
 
-		if (this.props.isLoggedIn === false) {
-			return (
-				<FormLogin
-					handleChange={handleChange}
-					validate={validate}
-					values={values}
-					validating={values.validating}
-				/>
-			)
-		} else {
+		
 		switch(step){
 			case 1:
 				return (
@@ -60,11 +50,13 @@ class UserForm extends Component {
 					<FormMoistureMOT
 						nextStep={this.nextStep}
 						prevStep={this.prevStep}
+						compressImages={compressImages}
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleImage={handleImage}
 						handleChoice={handleChoice}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 3: 
@@ -73,8 +65,10 @@ class UserForm extends Component {
 						nextStep={this.nextStep}
 						prevStep={this.prevStep}
 						handleChange={handleChange}
+						handlePicker={handlePicker}
 						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 4: 
@@ -87,6 +81,7 @@ class UserForm extends Component {
 						handleImage={handleImage}
 						handleColourChoice={handleChoice}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 5: 
@@ -99,6 +94,7 @@ class UserForm extends Component {
 						handleImage={handleImage}
 						handleColourChoice={handleChoice}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 6: 
@@ -112,6 +108,7 @@ class UserForm extends Component {
 						handleColourChoice={handleChoice}
 						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 7: 
@@ -134,7 +131,9 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 9: 
@@ -159,6 +158,7 @@ class UserForm extends Component {
 						handleTickBox={handleChoice}
 						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 11: 
@@ -171,6 +171,7 @@ class UserForm extends Component {
 						handleColourChoice={handleChoice}
 						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 12: 
@@ -183,6 +184,7 @@ class UserForm extends Component {
 						handleColourChoice={handleChoice}
 						handleImage={handleImage}
 						values={values}
+						removeImage={removeImage}
 					/>
 				)
 			case 13: 
@@ -209,7 +211,6 @@ class UserForm extends Component {
 						isUploading={values.isUploading}
 					/>
 				)
-			}
 		}
 	}
 }

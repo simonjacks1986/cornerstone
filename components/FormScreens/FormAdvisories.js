@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, StyleSheet, View, ActivityIndicator, Image } from 'react-native';
-import { Button, Text } from "native-base";
-import FormControls from './FormControls';
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
-import CsBigInput from '../CsBigInput';
-import FormModalColourPicker from './Modal/FormModalColourPicker';
+import { TouchableHighlight, StyleSheet, View, ActivityIndicator, Image, ScrollView, Alert } from 'react-native';
+import { Button, Text, Footer, FooterTab, Container } from "native-base";
+import FormControls from '../Parts/FormControls';
+import CsAppText from '../Parts/CsAppText';
+import CsAppLabel from '../Parts/CsAppLabel';
+import CsAppTitle from '../Parts/CsAppTitle';
+import CsInput from '../Parts/CsInput';
+import CsBigInput from '../Parts/CsBigInput';
+import FormModalColourPicker from '../Modal/FormModalColourPicker';
 import theme from '../../assets/styles/common.js';
-import SignatureScreen from './Parts/PartsSignature';
-import DateTimePicker from "react-native-modal-datetime-picker";
+import SignatureScreen from '../Parts/PartsSignature';
+import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 class FormAdvisories extends Component {
 	constructor(props) {
@@ -44,157 +44,159 @@ class FormAdvisories extends Component {
 	render(){
 		const { values, handleChange, handlePicker, handleSignature, handleChoice, handleFormSubmit, prevStep } = this.props;
 		return(
-			<View style={styles.container}>
-				<FormModalColourPicker
-					isOpen={this.state.modalVisible}
-					setModalVisible={this.setModalVisible}
-					handleColours={this.handleColours}
-				/>
+			<Container style={styles.container}>
+				<ScrollView>
+					<FormModalColourPicker
+						isOpen={this.state.modalVisible}
+						setModalVisible={this.setModalVisible}
+						handleColours={this.handleColours}
+					/>
 
-				<DateTimePicker
-					isVisible={this.state.isDatePickerVisible}
-					onConfirm={this.handleDatePicked}
-					onCancel={this.showDatePicker}
-					mode="date"
-				/>
+					<DateTimePickerModal
+						isVisible={this.state.isDatePickerVisible}
+						onConfirm={this.handleDatePicked}
+						onCancel={this.showDatePicker}
+						mode="date"
+					/>
 
-				<CsAppTitle>8.0 Advisories</CsAppTitle>
-				<CsAppText>Enter the survey details below.</CsAppText>
-				<View>
-					<View style={styles.whiteBlock}>
-						<View style={styles.row}>
-							<View style={styles.rowFirst}>
-								<CsAppLabel>Advisory</CsAppLabel>
-								<CsBigInput
-								  	handleChange={handleChange}
-									values={values}
-									identifier="advFinal1"
-								/>
-							</View>
-							<View style={styles.rowSecond}>
-								<CsAppLabel>Grade</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										this.setModalVisible(true);
-										this.setWhichGrade(1);
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.advGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
-										{ (values.advGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
-										{ (values.advGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
-						</View>
-					</View>
-
-					<View style={styles.whiteBlock}>
-						<View style={styles.row}>
-							<View style={styles.rowFirst}>
-								<CsAppLabel>Advisory</CsAppLabel>
-								<CsBigInput
-								  	handleChange={handleChange}
-									values={values}
-									identifier="advFinal2"
-								/>
-							</View>
-							<View style={styles.rowSecond}>
-								<CsAppLabel>Grade</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										this.setModalVisible(true);
-										this.setWhichGrade(2);
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.advGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
-										{ (values.advGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
-										{ (values.advGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
-						</View>
-					</View>
-
-					<View style={styles.whiteBlock}>
-						<View style={styles.row}>
-							<View style={styles.rowFirst}>
-								<CsAppLabel>Advisory</CsAppLabel>
-								<CsBigInput
-								  	handleChange={handleChange}
-									values={values}
-									identifier="advFinal3"
-								/>
-							</View>
-							<View style={styles.rowSecond}>
-								<CsAppLabel>Grade</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										this.setModalVisible(true);
-										this.setWhichGrade(3);
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.advGrade3 == 3) && <View style={styles.clickBoxGreen}></View> }
-										{ (values.advGrade3 == 2) && <View style={styles.clickBoxOrange}></View> }
-										{ (values.advGrade3 == 1) && <View style={styles.clickBoxRed}></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
-						</View>
-					</View>
-					
-					<View style={styles.divider}></View>
-					
-					<View style={styles.sigBlock}>
-						<View style={styles.rowSig}>
-							<View style={styles.rowSig1}>
-								<Text style={styles.textSig}>Author</Text>
-							</View>
-							<View style={styles.rowSig3}>
-								<SignatureScreen 
-									handleSignature={handleSignature}
-									testProps="This is a test"
-								/>
-							</View>
-							<View style={styles.rowSig1}>
-								<Text style={styles.textSig}>Date</Text>
-							</View>
-							<View style={styles.rowSig2}>
-								<TouchableHighlight 
-									onPress={() => {
-										this.showDatePicker();
-									}}
-									style={styles.datePicker}
-								>
-									<Text>{ (values.signedDate) && values.signedDate }</Text>
-								</TouchableHighlight>
-							</View>
-						</View>
-					</View>
-
-					<View style={styles.divider}></View>
-
+					<CsAppTitle>8.0 Advisories</CsAppTitle>
+					<CsAppText>Enter the survey details below.</CsAppText>
 					<View>
-						<View style={styles.row}>
-							<View style={styles.rowFirst}>
-								<Text style={styles.subTitle}>Survey Equipment:</Text>
-								<Text style={styles.margBottomSmall}>Air moisture readings have been obtained using a Tramex MRH, Protimeter Hygromaster or MMS2 measuring temperature in °C, % relative humidity and specific moisture content in g/Kg</Text>
-								<Text style={styles.margBottomSmall}>Non-destructive Protimeter Surveymaster using radio frequency with reaidngs given numerically between 0 to 999 REL.</Text>
-								<Text style={styles.margBottomSmall}>Tramex MRH uses electrcial impedance method in non-wood materials with reaidngs given numerically between 0 to 99.</Text>
-								<Text style={styles.margBottom}>Invasive Moisture Readings taken using a Protimeter Surveymaster reading %Mositure in wood and % wood moisture equivalent in other materials.</Text>
-								<Text style={styles.subTitle}>Note:</Text>
-								<Text style={styles.margBottom}>All readings taken with electronic metering are a guide and should be viewed with all the available information to gauge the true condition. However for the purposes of this report the following readings can be taken as an indication that the material checked could be said to be dry to a satisfactory level.</Text>
+						<View style={styles.whiteBlock}>
+							<View style={styles.row}>
+								<View style={styles.rowFirst}>
+									<CsAppLabel>Advisory</CsAppLabel>
+									<CsBigInput
+									  	handleChange={handleChange}
+										values={values}
+										identifier="advFinal1"
+									/>
+								</View>
+								<View style={styles.rowSecond}>
+									<CsAppLabel>Grade</CsAppLabel>
+									<TouchableHighlight
+										style={styles.clickBoxWidth}
+										onPress={() => {
+											this.setModalVisible(true);
+											this.setWhichGrade(1);
+										}}
+									>
+										<View style={styles.clickBox}>
+											{ (values.advGrade1 == 3) && <View style={styles.clickBoxGreen}></View> }
+											{ (values.advGrade1 == 2) && <View style={styles.clickBoxOrange}></View> }
+											{ (values.advGrade1 == 1) && <View style={styles.clickBoxRed}></View> }
+										</View>
+									</TouchableHighlight>
+								</View>
+							</View>
+						</View>
+
+						<View style={styles.whiteBlock}>
+							<View style={styles.row}>
+								<View style={styles.rowFirst}>
+									<CsAppLabel>Advisory</CsAppLabel>
+									<CsBigInput
+									  	handleChange={handleChange}
+										values={values}
+										identifier="advFinal2"
+									/>
+								</View>
+								<View style={styles.rowSecond}>
+									<CsAppLabel>Grade</CsAppLabel>
+									<TouchableHighlight
+										style={styles.clickBoxWidth}
+										onPress={() => {
+											this.setModalVisible(true);
+											this.setWhichGrade(2);
+										}}
+									>
+										<View style={styles.clickBox}>
+											{ (values.advGrade2 == 3) && <View style={styles.clickBoxGreen}></View> }
+											{ (values.advGrade2 == 2) && <View style={styles.clickBoxOrange}></View> }
+											{ (values.advGrade2 == 1) && <View style={styles.clickBoxRed}></View> }
+										</View>
+									</TouchableHighlight>
+								</View>
+							</View>
+						</View>
+
+						<View style={styles.whiteBlock}>
+							<View style={styles.row}>
+								<View style={styles.rowFirst}>
+									<CsAppLabel>Advisory</CsAppLabel>
+									<CsBigInput
+									  	handleChange={handleChange}
+										values={values}
+										identifier="advFinal3"
+									/>
+								</View>
+								<View style={styles.rowSecond}>
+									<CsAppLabel>Grade</CsAppLabel>
+									<TouchableHighlight
+										style={styles.clickBoxWidth}
+										onPress={() => {
+											this.setModalVisible(true);
+											this.setWhichGrade(3);
+										}}
+									>
+										<View style={styles.clickBox}>
+											{ (values.advGrade3 == 3) && <View style={styles.clickBoxGreen}></View> }
+											{ (values.advGrade3 == 2) && <View style={styles.clickBoxOrange}></View> }
+											{ (values.advGrade3 == 1) && <View style={styles.clickBoxRed}></View> }
+										</View>
+									</TouchableHighlight>
+								</View>
+							</View>
+						</View>
+						
+						<View style={styles.divider}></View>
+						
+						<View style={styles.sigBlock}>
+							<View style={styles.rowSig}>
+								<View style={styles.rowSig1}>
+									<Text style={styles.textSig}>Author</Text>
+								</View>
+								<View style={styles.rowSig3}>
+									<SignatureScreen 
+										handleSignature={handleSignature}
+										testProps="This is a test"
+									/>
+								</View>
+								<View style={styles.rowSig1}>
+									<Text style={styles.textSig}>Date</Text>
+								</View>
+								<View style={styles.rowSig2}>
+									<TouchableHighlight 
+										onPress={() => {
+											this.showDatePicker();
+										}}
+										style={styles.datePicker}
+									>
+										<Text>{ (values.signedDate) && values.signedDate }</Text>
+									</TouchableHighlight>
+								</View>
+							</View>
+						</View>
+
+						<View style={styles.divider}></View>
+
+						<View>
+							<View style={styles.row}>
+								<View style={styles.rowFirst}>
+									<Text style={styles.subTitle}>Survey Equipment:</Text>
+									<Text style={styles.margBottomSmall}>Air moisture readings have been obtained using a Tramex MRH, Protimeter Hygromaster or MMS2 measuring temperature in °C, % relative humidity and specific moisture content in g/Kg</Text>
+									<Text style={styles.margBottomSmall}>Non-destructive Protimeter Surveymaster using radio frequency with readings given numerically between 0 to 999 REL.</Text>
+									<Text style={styles.margBottomSmall}>Tramex MRH uses electrcial impedance method in non-wood materials with readings given numerically between 0 to 99.</Text>
+									<Text style={styles.margBottom}>Invasive Moisture Readings taken using a Protimeter Surveymaster reading %Mositure in wood and % wood moisture equivalent in other materials.</Text>
+									<Text style={styles.subTitle}>Note:</Text>
+									<Text style={styles.margBottom}>All readings taken with electronic metering are a guide and should be viewed with all the available information to gauge the true condition. However for the purposes of this report the following readings can be taken as an indication that the material checked could be said to be dry to a satisfactory level.</Text>
+								</View>
 							</View>
 						</View>
 					</View>
-				</View>
-				
-				<View style={styles.buttons}>
+				</ScrollView>
+		        <Footer>
+		          <FooterTab style={styles.buttons}>
 				  	<Button
 				  		bordered
 				  		style={styles.buttonPrev}
@@ -204,23 +206,37 @@ class FormAdvisories extends Component {
 					>
 						<Text style={styles.titlePrev}>Back</Text>
 					</Button>
+					<Button></Button>
 					<Button
 						style={styles.button}
-						onPress = {() => { handleFormSubmit()}}
+						onPress = {() => { 
+							Alert.alert(
+								'Are you sure you want to submit this survey?', '', [ 
+								  { text: 'Yes', onPress: () => handleFormSubmit() },
+								  { text: 'Cancel', onPress: () => console.log('Cancelled'), style: 'cancel'},
+								],{cancelable: false},
+								);
+							}
+						}
 					>
 						{(this.props.isUploading == true) ? <ActivityIndicator size="large" color="#FFFFFF" /> : <Text style={styles.title}>Finish & Upload</Text>}
 					</Button>
-				</View>
-				
-			</View>
+		          </FooterTab>
+		        </Footer>
+      		</Container>
 		)
 	}
 }
+let {Platform} = React;
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding:20,
-  },
+  container: theme.CONTAINER,
+  whiteBlock: theme.WHITEBLOCK,
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
+  row: theme.ROW,
   subTitle: {
   	fontSize: 18, 
   	marginBottom: 16, 
@@ -232,22 +248,7 @@ const styles = StyleSheet.create({
   },
   margBottomSmall: {
   	marginBottom:16,
-  },
-  whiteBlock: {
-    backgroundColor:'#FFF',
-    borderColor:'#DDD',
-    borderWidth:2,
-    paddingLeft:10,
-    paddingRight:10,
-    paddingTop:20,
-    paddingBottom:20,
-    marginBottom:20,
-  },
-  row: {
-    flex: 1,
-    flexDirection:'row',
-    marginBottom:20,
-  },
+  }, 
   rowFirst: {
   	flex:5,
   	margin:5,
@@ -275,42 +276,9 @@ const styles = StyleSheet.create({
   	flex:3,
   	margin:5
   },
-  clickBoxWidth: {
-  	width:40,
-  },
-  clickBox: {
-  	borderWidth:1,
-  	borderColor:'#DDDDDD',
-  	borderStyle:'solid',
-  	backgroundColor:'#fff',
-  	height:40,
-  	marginTop:15,
-  	padding:5
-  },
-  clickBoxRed: {
-  	backgroundColor: '#FC0000',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxOrange: {
-  	backgroundColor: '#FCC400',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxGreen: {
-  	backgroundColor: '#28A745',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-   buttons: {
-  	alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    width: '100%',
-    marginTop: 20,
+  buttons: {
+  	paddingTop: (Platform.OS === 'ios') ? 10 : 0,
+  	backgroundColor: '#F4F6FC',
   },
   buttonPrev: {
   	borderColor: theme.PRIMARY_COLOR,
@@ -319,7 +287,6 @@ const styles = StyleSheet.create({
 	height: 48,
 	justifyContent: 'center',
 	borderRadius: 1,
-
   },
   button: {
   	backgroundColor: theme.PRIMARY_COLOR,
@@ -335,10 +302,6 @@ const styles = StyleSheet.create({
   titlePrev: {
   	fontSize: theme.FONT_SIZE_SMALL,
   	color: theme.PRIMARY_COLOR,
-  },
-  sigBlock: {
-  	// paddingTop:20,
-  	// paddingbottom:20,
   },
   divider: {
   	height:1,

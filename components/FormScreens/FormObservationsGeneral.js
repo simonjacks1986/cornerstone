@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import FormControls from './FormControls';
-import CsAppText from '../CsAppText';
-import CsAppLabel from '../CsAppLabel';
-import CsAppTitle from '../CsAppTitle';
-import CsInput from '../CsInput';
-import { Picker, Icon, Button } from "native-base";
-import FormModalColourPicker from './Modal/FormModalColourPicker';
-import FormModalCamera from './Modal/FormModalCamera';
-import FormModalImage from './Modal/FormModalImage';
+import { TouchableHighlight, StyleSheet, View, Text, ScrollView } from 'react-native';
+import { Picker, Icon, Button, Container } from "native-base";
+import FormControls from '../Parts/FormControls';
+import CsAppText from '../Parts/CsAppText';
+import CsAppLabel from '../Parts/CsAppLabel';
+import CsAppTitle from '../Parts/CsAppTitle';
+import CsInput from '../Parts/CsInput';
+import FormModalColourPicker from '../Modal/FormModalColourPicker';
+import FormModalCamera from '../Modal/FormModalCamera';
+import FormModalImage from '../Modal/FormModalImage';
 import FormObservationSection from './Sections/FormObservationSection';
+import theme from '../../assets/styles/common.js';
 
 class FormObservationsGeneral extends Component {
 	constructor(props) {
@@ -36,17 +37,19 @@ class FormObservationsGeneral extends Component {
 		handleColourChoice('obsGrade' + this.state.whichGrade, which);
 		this.setModalColourVisible(!this.state.modalColourVisible);
 	}
-	setAdditionalSections = amount => {
+	setAdditionalSections(amount){
 		let incrementAmount = this.state.additionalSections;
-		this.setState({additionalSections: incrementAmount + 1});
-	    const { handleColourChoice } = this.props;
-	    handleColourChoice('obsgAmountOfSections', this.state.additionalSections + 1);
+		if(incrementAmount + amount >= 0) {
+			this.setState({additionalSections: incrementAmount + amount});
+		    const { handleColourChoice } = this.props;
+		    handleColourChoice('obsgAmountOfSections', this.state.additionalSections + amount);
+		}
 	}
 
 	render(){
 		const values2 = this.state;
 		let loopCount = 1;
-		const { values, handleChange, handlePicker, handleImage } = this.props;
+		const { values, handleChange, handlePicker, handleImage, removeImage } = this.props;
 		const items = [];
 
 		for (var i = 1; i <= this.state.additionalSections; i++) {
@@ -62,61 +65,64 @@ class FormObservationsGeneral extends Component {
 				setModalVisible={this.setModalColourVisible}
 				setWhichGrade={this.setWhichGrade}
 				setWhichImage={this.setWhichImage}
+				removeImage={removeImage}
 			/>)
 		}
 		return(
-			<View style={styles.container}>
-				<FormModalColourPicker
-					isOpen={this.state.modalColourVisible}
-					setModalVisible={this.setModalColourVisible}
-					handleColours={this.handleColours}
-				/>
+			<Container style={styles.container}>
+				<ScrollView>
+					<FormModalColourPicker
+						isOpen={this.state.modalColourVisible}
+						setModalVisible={this.setModalColourVisible}
+						handleColours={this.handleColours}
+					/>
 
-				<FormModalImage
-					isOpen={this.state.modalImageVisible}
-					setModalVisible={this.setModalImageVisible}
-					imageUri={values.photos[this.state.whichImage]}
-				/>
+					<FormModalImage
+						isOpen={this.state.modalImageVisible}
+						setModalVisible={this.setModalImageVisible}
+						imageUri={values.photos[this.state.whichImage]}
+						removeImage={removeImage}
+						identifier={this.state.whichImage}
+					/>
 
-				<FormModalCamera 
-					isOpen={this.state.modalCameraVisible}
-					setModalCameraVisible={this.setModalCameraVisible}
-					handleImage={handleImage}
-					identifier={this.state.whichImage}
-				/>
+					<FormModalCamera 
+						isOpen={this.state.modalCameraVisible}
+						setModalCameraVisible={this.setModalCameraVisible}
+						handleImage={handleImage}
+						identifier={this.state.whichImage}
+					/>
 
-				<CsAppTitle>6.0 Observations - General</CsAppTitle>
-				<CsAppText>Enter the survey details below.</CsAppText>
-				<View>
-					{items}
+					<CsAppTitle>6.0 Observations - General</CsAppTitle>
+					<CsAppText>Enter the survey details below.</CsAppText>
 					<View>
-						<Button
-							style={styles.addButtton}
-							onPress={() => { this.setAdditionalSections(1) }}
-						>
-							<Text style={styles.addButttonText}>Add another section +</Text>
-						</Button>
+						{items}
+						<View style={styles.addButttonContainer}>
+							<Button
+								style={styles.addButtton}
+								onPress={() => { this.setAdditionalSections(1) }}
+							>
+								<Text style={styles.addButttonText}>Add another section +</Text>
+							</Button>
+							<Button
+								style={styles.addButtton}
+								onPress={() => { this.setAdditionalSections(-1) }}
+							>
+								<Text style={styles.addButttonText}>Remove section -</Text>
+							</Button>
+						</View>
 					</View>
-				</View>
-					
+				</ScrollView>
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
 				/>
-			</View>
+			</Container>
 		)
 	}
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding:20,
-  },
-  row: {
-    flex: 1,
-    flexDirection:'row',
-    marginBottom:20,
-  },
+  container: theme.CONTAINER,
+  row: theme.ROW,
   rowFirst: {
   	flex:3,
   	margin:5
@@ -128,36 +134,11 @@ const styles = StyleSheet.create({
   rowThird: {
   	margin:5
   },
-  clickBoxWidth: {
-  	width:40,
-  },
-  clickBox: {
-  	borderWidth:1,
-  	borderColor:'#DDDDDD',
-  	borderStyle:'solid',
-  	backgroundColor:'#fff',
-  	height:40,
-  	marginTop:15,
-  	padding:5
-  },
-  clickBoxRed: {
-  	backgroundColor: '#FC0000',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxOrange: {
-  	backgroundColor: '#FCC400',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
-  clickBoxGreen: {
-  	backgroundColor: '#28A745',
-  	width:'100%',
-  	height:'100%',
-  	borderRadius:3
-  },
+  clickBoxWidth: theme.CLICKBOXWIDTH,
+  clickBox: theme.CLICKBOX,
+  clickBoxRed: theme.CLICKBOXRED,
+  clickBoxOrange: theme.CLICKBOXORANGE,
+  clickBoxGreen:theme.CLICKBOXGREEN,
   photoRow : {
   	flex:1,
   	justifyContent: 'space-between',
@@ -170,14 +151,12 @@ const styles = StyleSheet.create({
   	color: '#2187FF',
   	textDecorationLine: 'underline',
   },
-  picker: {
-  	backgroundColor: "#fff",
-  	borderColor:'#DDDDDD',
-  	borderWidth:1,
-  	marginTop: 16,
-  	borderRadius: 2,
-  	marginBottom:10,
-  	height:40
+  picker: theme.PICKER,
+  addButttonContainer: {
+  	marginBottom:40,
+  	marginTop:20,
+  	justifyContent: 'space-between',
+  	flexDirection: 'row'
   },
   addButtton: {
   	backgroundColor: '#E5E5E5',
@@ -185,8 +164,6 @@ const styles = StyleSheet.create({
   	justifyContent: 'center',
   	borderRadius:3,
   	height:48,
-  	marginTop:20,
-  	marginBottom:40,
   },
   addButttonText: {
   	color:'#122F45',

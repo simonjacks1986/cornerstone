@@ -5,7 +5,7 @@ import { Icon } from "native-base";
 class FormModalHeaderMenu extends Component {
 
   render(){
-    const { isOpen, logOut, saveSession, loadSession, setMenuVisible } = this.props;
+    const { isOpen, logOut, switchStep, saveSession, loadSession, setMenuVisible, userInfo, compressAllImages } = this.props;
     return(
       <Modal
         animationType="fade"
@@ -26,6 +26,17 @@ class FormModalHeaderMenu extends Component {
             <View 
               style={styles.menuItems}
             >
+              <TouchableHighlight onPress={() => { switchStep(1); }}>
+                <View style={styles.menuItem}>
+                  <Icon 
+                    style={styles.menuItemIcon}
+                    name='arrow-left'
+                    type='FontAwesome5'
+                  />
+                  <Text style={styles.menuItemText}>New survey</Text>
+                </View>
+              </TouchableHighlight>
+
               <TouchableHighlight onPress={() => { saveSession(); }}>
                 <View style={styles.menuItem}>
                   <Icon 
@@ -48,6 +59,17 @@ class FormModalHeaderMenu extends Component {
                 </View>
               </TouchableHighlight>
 
+              <TouchableHighlight onPress={() => { compressAllImages(); }}>
+                <View style={styles.menuItem}>
+                  <Icon 
+                    style={styles.menuItemIcon}
+                    name='compress'
+                    type='FontAwesome5'
+                  />
+                  <Text style={styles.menuItemText}>Compress images</Text>
+                </View>
+              </TouchableHighlight>
+
               <TouchableHighlight onPress={() => { logOut() }}>
                 <View style={styles.menuItem}>
                   <Icon 
@@ -58,6 +80,7 @@ class FormModalHeaderMenu extends Component {
                   <Text style={styles.menuItemText}>Log out</Text>
                 </View>
               </TouchableHighlight>
+              <Text style={styles.loggedText}>User - {userInfo.name}</Text>
             </View>
           </View>
         </SafeAreaView>
@@ -75,8 +98,8 @@ const styles = StyleSheet.create({
   },
   menuModal: {
     backgroundColor: '#002163',
-    width:240,
-    height:240,
+    width:280,
+    height:380,
     padding:15,
     flexDirection: 'column',
     justifyContent: 'space-between',
@@ -115,6 +138,10 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color:'white',
     marginTop: -1,
+  },
+  loggedText: {
+    color: '#fff',
+    marginTop: 50
   }
 });
 export default FormModalHeaderMenu;

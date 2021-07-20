@@ -64,25 +64,100 @@ class FormInternal extends Component {
 
 					<CsAppTitle>3.0 Internal</CsAppTitle>
 					<CsAppText>Before commencing the internal survey, place hygrometers/sensors in each main living area avoiding the kitchen and bathroom and avoiding direct sunlight, heating elements etc. Readings from the device are to be collected upon completion of the internal survey</CsAppText>
-					
+					<View style={styles.confirmLabel}>
+			            <CsAppLabel>Confirm</CsAppLabel>
+						<TouchableHighlight
+							style={styles.confirmBoxWidth}
+							onPress={() => {
+							  handleTickBox('intConfirm', 1)
+							}}
+						>
+						<View style={styles.tickBox}>
+							{ (values.intConfirm == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
+						</View>
+						</TouchableHighlight>
+			        </View>
 					<View>
-						
 						<View style={styles.row}>
 							<View style={styles.one2}>
-								<CsAppLabel>Occupants at time of survey</CsAppLabel>
-								<CsInput
-								  	handleChange={handleChange}
-									values={values}
-									identifier="occupantsSurvey"
-								/>
+								<CsAppLabel>Ground floor</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.intGroundFloor}
+						              onValueChange={handlePicker('intGroundFloor')}
+						            >
+						              <Picker.Item label="Concrete" value="Concrete" />
+						              <Picker.Item label="Timber Suspended" value="Timber Suspended" />
+						              <Picker.Item label="Ground supported slab" value="Ground supported slab" />
+						              <Picker.Item label="GSS Insulated" value="GSS Insulated" />
+						              <Picker.Item label="Block & Beam Insulated" value="Block & Beam Insulated" />
+						              <Picker.Item label="Block & Beam Uninsulated" value="Block & Beam Uninsulated" />
+						              <Picker.Item label="Uncomfirmed" value="Uncomfirmed" />
+						              <Picker.Item label="Option" value="Option" />
+						        </Picker>
 							</View>
 							<View style={styles.one2}>
-								<CsAppLabel>Average number of occupants</CsAppLabel>
-								<CsInput
-								  	handleChange={handleChange}
-									values={values}
-									identifier="occupantsAverage"
-								/>
+								<CsAppLabel>First Floor</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.intFirstFloor}
+						              onValueChange={handlePicker('intFirstFloor')}
+						            >
+						              <Picker.Item label="Timber Suspended" value="Timber Suspended" />
+						              <Picker.Item label="Concrete" value="Concrete" />
+						              <Picker.Item label="Insulated" value="Insulated" />
+						              <Picker.Item label="Uncomfirmed" value="Uncomfirmed" />
+						              <Picker.Item label="Option" value="Option" />
+						        </Picker>
+							</View>
+						</View>
+						<View style={styles.row}>
+							<View style={styles.one2}>
+								<CsAppLabel>Ceilings</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.intCeilings}
+						              onValueChange={handlePicker('intCeilings')}
+						            >
+						              <Picker.Item label="Solid Lath & Plaster" value="Solid Lath & Plaster" />
+						              <Picker.Item label="Suspended" value="Suspended" />
+						              <Picker.Item label="Concrete" value="Concrete" />
+						              <Picker.Item label="Plasterboard" value="Plasterboard" />
+						              <Picker.Item label="Artex Finish" value="Artex Finish" />
+						              <Picker.Item label="Uncomfirmed" value="Uncomfirmed" />
+						              <Picker.Item label="N/A" value="N/A" />
+						        </Picker>
+							</View>
+							<View style={styles.one2}>
+								<CsAppLabel>Walls</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.intWalls}
+						              onValueChange={handlePicker('intWalls')}
+						            >
+						              <Picker.Item label="Plasterboard" value="Plasterboard" />
+						              <Picker.Item label="Dry Lined" value="Dry Lined" />
+						              <Picker.Item label="Insulated" value="Insulated" />
+						              <Picker.Item label="Stud Walls" value="Stud Walls" />
+						              <Picker.Item label="Solid Plastered" value="Solid Plastered" />
+						              <Picker.Item label="Mix of Solid and Stud walls" value="Mix of Solid and Stud walls" />
+						        </Picker>
 							</View>
 						</View>
 						<CsAppTitle>Moisture Survey</CsAppTitle>

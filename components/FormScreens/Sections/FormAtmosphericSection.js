@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { TouchableHighlight, StyleSheet, View, Text } from 'react-native';
-import CsAppText from '../../CsAppText';
-import CsAppLabel from '../../CsAppLabel';
-import CsAppTitle from '../../CsAppTitle';
-import CsInput from '../../CsInput';
+import CsAppText from '../../Parts/CsAppText';
+import CsAppLabel from '../../Parts/CsAppLabel';
+import CsAppTitle from '../../Parts/CsAppTitle';
+import CsInput from '../../Parts/CsInput';
 import { Picker, Icon } from "native-base";
+import theme from '../../../assets/styles/common.js';
 
 class FormAtmosphericSection extends Component {
 	render(){
@@ -114,25 +115,8 @@ const styles = StyleSheet.create({
   sectionBlock: {
     marginTop:20
   },
-  whiteBlock: {
-    backgroundColor:'#FFF',
-    borderColor:'#DDD',
-    borderWidth:2,
-    paddingLeft:10,
-    paddingRight:10,
-    paddingTop:20,
-    paddingBottom:20,
-    marginBottom:20,
-  },
-  picker: {
-    backgroundColor: "#fff",
-    borderColor:'#DDDDDD',
-    borderWidth:1,
-    marginTop: 16,
-    borderRadius: 2,
-    marginBottom:10,
-    height:40
-  },
+  whiteBlock: theme.WHITEBLOCK,
+  picker: theme.PICKER,
 
 });
 export default FormAtmosphericSection;

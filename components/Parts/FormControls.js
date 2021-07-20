@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { StyleSheet,  View } from 'react-native';
-import { Button, Text } from "native-base";
+import React, { Component, } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { Button, Text, Footer, FooterTab } from "native-base";
 import theme from '../../assets/styles/common.js';
 
 class FormControls extends Component {
@@ -14,33 +14,35 @@ class FormControls extends Component {
 	}
 	render() {
 		return (
-			<View style={styles.buttons}>
-			  	<Button
-			  		bordered
-			  		style={styles.buttonPrev}
-					title="Previous"
-					type="outline"
-					onPress = {this.back}
-				>
+			<Footer>
+		        <FooterTab style={styles.buttons}>
+					<Button
+				  		bordered
+				  		style={styles.buttonPrev}
+						title="Previous"
+						type="outline"
+						onPress = {this.back}
+					>
 					<Text style={styles.titlePrev}>Back</Text>
-				</Button>
-				<Button
-					style={styles.button}
-					onPress = {this.continue}
-				>
-					<Text style={styles.title}>Next</Text>
-				</Button>
-			</View>
+					</Button>
+					<Button></Button>
+					<Button
+						style={styles.button}
+						onPress = {this.continue}
+					>
+						<Text style={styles.title}>Next</Text>
+					</Button>
+				</FooterTab>
+			</Footer>
 		);
 	}
 }
+
+let {Platform} = React;
 const styles = StyleSheet.create({
   buttons: {
-  	alignItems: 'center',
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    width: '100%',
-    marginTop: 20,
+  	paddingTop: (Platform.OS === 'ios') ? 10 : 0,
+  	backgroundColor: '#F4F6FC',
   },
   buttonPrev: {
   	borderColor: theme.PRIMARY_COLOR,
@@ -49,7 +51,6 @@ const styles = StyleSheet.create({
 	height: 48,
 	justifyContent: 'center',
 	borderRadius: 1,
-
   },
   button: {
   	backgroundColor: theme.PRIMARY_COLOR,
@@ -69,4 +70,3 @@ const styles = StyleSheet.create({
 });
 
 export default FormControls;
-	

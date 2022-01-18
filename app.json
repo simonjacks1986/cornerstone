@@ -8,7 +8,7 @@
       "android",
       "web"
     ],
-    "version": "1.2.11",
+    "version": "1.2.13",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
@@ -24,7 +24,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.boxchilli.cmm",
-      "buildNumber": "1.1.14"
+      "buildNumber": "1.1.13"
     },
     "android": {
       "package": "com.boxchilli.cmm",

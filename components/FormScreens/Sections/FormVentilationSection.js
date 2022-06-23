@@ -44,15 +44,32 @@ class FormVentilationSection extends Component {
                 selectedValue={values['venUnitLocation' + iteration]}
                 onValueChange={handlePicker('venUnitLocation' + iteration)}
             >
-                <Picker.Item label="Window" value="Window" />
-                <Picker.Item label="Internal Wall" value="Internal Wall" />
-                <Picker.Item label="Window Wall" value="Window Wall" />
+                <Picker.Item label="External wall" value="External wall" />
+                <Picker.Item label="External wall – Next to window" value="External wall – Next to window" />
+                <Picker.Item label="In window" value="In window" />
                 <Picker.Item label="Ceiling" value="Ceiling" />
+                <Picker.Item label="Ceiling – Next to window" value="Ceiling – Next to window" />
                 <Picker.Item label="Cooker Hood" value="Cooker Hood" />
                 <Picker.Item label="None" value="None" />
             </Picker>
           </View> 
         </View>
+        {
+          values['venRoom' + iteration] == 'Other' &&
+          <View style={styles.row}>
+              <View style={styles.one1}>
+                  <View style={styles.one2}>
+                      <CsAppLabel>Details of room (other)</CsAppLabel>
+                      <CsInput
+                          handleChange={handleChange}
+                          values={values}
+                          identifier={"venRoomOther" + iteration}
+                      />
+                  </View>
+              </View>    
+          </View>
+        }
+
         <View style={styles.row}>
           <View style={styles.one2}>
             <CsAppLabel>How Operated?</CsAppLabel>
@@ -67,9 +84,8 @@ class FormVentilationSection extends Component {
             >
                 <Picker.Item label="Isolator Switch" value="Isolator Switch" />
                 <Picker.Item label="Pull Cord" value="Pull Cord" />
-                <Picker.Item label="Light Switch" value="Light Switch" />
-                <Picker.Item label="Push Button" value="Push Button" />
-                <Picker.Item label="RH Control" value="RH Control" />
+                <Picker.Item label="Light function" value="Light function" />
+                <Picker.Item label="Humidity control" value="Humidity control" />
                 <Picker.Item label="Other" value="Other" />
             </Picker>
           </View> 
@@ -99,7 +115,7 @@ class FormVentilationSection extends Component {
               values={values}
               identifier={"venFlowRate" + iteration}
             />
-          </View> 
+          </View>
           <View style={styles.one2}>
             <CsAppLabel>Overrun (mins)</CsAppLabel>
             <CsInput

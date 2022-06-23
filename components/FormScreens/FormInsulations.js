@@ -99,50 +99,13 @@ class FormInsulations extends Component {
 							</View>
 						</View>
 						<View style={styles.row}>
-							<View style={styles.row1}>
-								<CsAppLabel>Yes</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										handleTickBox('insLoft', 1)
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.insLoft == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
-							<View style={styles.row1}>
-								<CsAppLabel>No</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										handleTickBox('insLoft', 0)
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.insLoft == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
 							<View style={styles.rowFull}>
-								<CsAppLabel>Condition</CsAppLabel>
-								<Picker
-						            note
-						            mode="dropdown"
-						            style={styles.picker}
-						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
-						            selectedValue={values.insCoverage1}
-						            onValueChange={handlePicker('insCoverage1')}
-						        >
-						            <Picker.Item label="Complete" value="Complete" />
-						            <Picker.Item label="Incomplete" value="Incomplete" />
-						            <Picker.Item label="Unknown" value="Unknown" />
-						            <Picker.Item label="None" value="None" />
-						            <Picker.Item label="N/A" value="Option" />
-						            
-						        </Picker>
+								<CsAppLabel>Details</CsAppLabel>
+						        <CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="insCoverage1"
+								/>
 							</View>
 							<View style={styles.rowFull}>
 								<CsAppLabel>Depth (mm)</CsAppLabel>
@@ -222,47 +185,13 @@ class FormInsulations extends Component {
 							</View>
 						</View>
 						<View style={styles.row}>
-							<View style={styles.row1}>
-								<CsAppLabel>Yes</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										handleTickBox('insOther', 1)
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.insOther == 1) && <View><Image source={require('../../assets/check.png')}/></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
-							<View style={styles.row1}>
-								<CsAppLabel>No</CsAppLabel>
-								<TouchableHighlight
-									style={styles.clickBoxWidth}
-									onPress={() => {
-										handleTickBox('insOther', 0)
-									}}
-								>
-									<View style={styles.clickBox}>
-										{ (values.insOther == 0) && <View><Image source={require('../../assets/check.png')}/></View> }
-									</View>
-								</TouchableHighlight>
-							</View>
 							<View style={styles.rowFull}>
-								<CsAppLabel>Condition</CsAppLabel>
-								<Picker
-						            note
-						            mode="dropdown"
-						            style={styles.picker}
-						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
-						            selectedValue={values.insCoverage2}
-						            onValueChange={handlePicker('insCoverage2')}
-						        >
-						        	<Picker.Item label="None" value="None" />
-						            <Picker.Item label="Unknown" value="Unknown" />
-						            <Picker.Item label="N/A" value="Option" />
-						        </Picker>
+								<CsAppLabel>Details</CsAppLabel>
+						        <CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="insCoverage2"
+								/>
 							</View>
 							<View style={styles.row1}>
 								<CsAppLabel>Grade</CsAppLabel>

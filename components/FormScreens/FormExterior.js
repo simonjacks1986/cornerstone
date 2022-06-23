@@ -107,18 +107,20 @@ class FormExterior extends Component {
 						              selectedValue={values.exFacade}
 						              onValueChange={handlePicker('exFacade')}
 						            >
-						              <Picker.Item label="Brick" value="Brick" />
-						              <Picker.Item label="Stone" value="Stone" />
-						              <Picker.Item label="Timber" value="Timber" />
-						              <Picker.Item label="Render" value="Render" />
-						              <Picker.Item label="Panel" value="Panel" />
-						              <Picker.Item label="Clad" value="Clad" />
-						              <Picker.Item label="Mix" value="Mix" />
-						              <Picker.Item label="None" value="None" />
+									<Picker.Item label="Brick" value="Brick" />
+									<Picker.Item label="Stone" value="Stone" />
+									<Picker.Item label="Timber" value="Timber" />
+									<Picker.Item label="Render" value="Render" />
+									<Picker.Item label="Panel" value="Panel" />
+									<Picker.Item label="Clad" value="Clad" />
+									<Picker.Item label="Mix" value="Mix" />
+									<Picker.Item label="Solid" value="Solid" />
+									<Picker.Item label="Cavity" value="Cavity" />
+									<Picker.Item label="None" value="None" />
 						        </Picker>
 							</View>
 							<View style={styles.rowFirst}>
-								<CsAppLabel>Insulated</CsAppLabel>
+								<CsAppLabel>Insulation</CsAppLabel>
 								<Picker
 						              note
 						              mode="dropdown"
@@ -128,11 +130,53 @@ class FormExterior extends Component {
 						              selectedValue={values.exInsulated}
 						              onValueChange={handlePicker('exInsulated')}
 						            >
-						              <Picker.Item label="None" value="None" />
-						              <Picker.Item label="Unconfirmed" value="Unconfirmed" />
-						              <Picker.Item label="Cavity" value="Cavity" />
-						              <Picker.Item label="External" value="External" />
-						              <Picker.Item label="Internal" value="Internal" />
+					              	<Picker.Item label="None" value="None" />
+									<Picker.Item label="Unconfirmed" value="Unconfirmed" />
+									<Picker.Item label="Cavity" value="Cavity" />
+									<Picker.Item label="External" value="External" />
+									<Picker.Item label="Internal" value="Internal" />
+									<Picker.Item label="Cavity – retrofit" value="Cavity – retrofit" />
+									<Picker.Item label="External – retrofit" value="External – retrofit" />
+									<Picker.Item label="Internal - retrofit" value="Internal - retrofit" />
+						        </Picker>
+							</View>
+						</View>
+
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Construction material</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.exConstruct}
+						              onValueChange={handlePicker('exConstruct')}
+						            >
+									<Picker.Item label="Brick/Block" value="Brick/Block" />
+									<Picker.Item label="Stone" value="Stone" />
+									<Picker.Item label="Concrete" value="Concrete" />
+									<Picker.Item label="Timber" value="Timber" />
+									<Picker.Item label="Metal frame" value="Metal frame" />
+									<Picker.Item label="Cob" value="Cob" />
+						        </Picker>
+							</View>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Exterior Finish</CsAppLabel>
+								<Picker
+						              note
+						              mode="dropdown"
+						              style={styles.picker}
+						              placeholder="- Select -"
+						              iosIcon={<Icon name="arrow-down" />}
+						              selectedValue={values.exExFin}
+						              onValueChange={handlePicker('exExFin')}
+						            >
+					              	<Picker.Item label="Natural" value="Natural" />
+									<Picker.Item label="Render system" value="Render system" />
+									<Picker.Item label="Cladding" value="Cladding" />
 						        </Picker>
 							</View>
 						</View>

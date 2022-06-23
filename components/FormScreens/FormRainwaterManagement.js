@@ -90,7 +90,7 @@ class FormRainwaterManagement extends Component {
 
 						<View style={styles.row}>
 							<View style={styles.rowFirst}>
-								<CsAppLabel>Roof</CsAppLabel>
+								<CsAppLabel>Roof Type</CsAppLabel>
 								<Picker
 						            note
 						            mode="dropdown"
@@ -100,16 +100,11 @@ class FormRainwaterManagement extends Component {
 						            selectedValue={values.rmRoof}
 						            onValueChange={handlePicker('rmRoof')}
 						        >
-						            <Picker.Item label="Tile" value="Tile" />
-						            <Picker.Item label="Slate" value="Slate" />
 						            <Picker.Item label="Flat" value="Flat" />
-						            <Picker.Item label="Corrugated" value="Corrugated" />
-						            <Picker.Item label="Clad" value="Clad" />
-						            <Picker.Item label="Standard Pitched" value="Standard Pitched" />
-						            <Picker.Item label="Mono" value="Mono" />
-						            <Picker.Item label="Butterfly" value="Butterfly" />
-						            <Picker.Item label="Mansard" value="Mansard" />
-						            <Picker.Item label="N/A" value="N/A" />
+									<Picker.Item label="Pitched" value="Pitched" />
+									<Picker.Item label="Pitched mono" value="Pitched mono" />
+									<Picker.Item label="Pitched Butterfly" value="Pitched Butterfly" />
+									<Picker.Item label="Mansard" value="Mansard" />
 						        </Picker>
 						        <View style={styles.photoRow}>
 									<Text 
@@ -172,6 +167,87 @@ class FormRainwaterManagement extends Component {
 							</View>
 						</View>
 
+
+						<View style={styles.row}>
+							<View style={styles.rowFirst}>
+								<CsAppLabel>Roof System</CsAppLabel>
+								<Picker
+						            note
+						            mode="dropdown"
+						            style={styles.picker}
+						            placeholder="- Select -"
+						            iosIcon={<Icon name="arrow-down" />}
+						            selectedValue={values.rmRoofSys}
+						            onValueChange={handlePicker('rmRoofSys')}
+						        >
+									<Picker.Item label="Membrane sheet" value="Membrane sheet" />
+									<Picker.Item label="Asphalt" value="Asphalt" />
+									<Picker.Item label="Tile" value="Tile" />
+									<Picker.Item label="Slate" value="Slate" />
+									<Picker.Item label="Metal" value="Metal" />
+									<Picker.Item label="Thatch" value="Thatch" />
+						        </Picker>
+						        <View style={styles.photoRow}>
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmRoofSys');
+											this.setModalCameraVisible(true);
+							    			}
+										}
+									>
+										Take Photo</Text>
+									{ values.photos.rmRoofSys && 
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+							    			this.setWhichImage('rmRoofSys');
+											this.setModalImageVisible(true);
+							    			}
+										}
+									>
+										View Photo
+									</Text>
+									}
+									<Text 
+										style={styles.photoButton}
+										onPress={() => {
+											this.setWhichImage('rmRoofSys');
+               								this._pickImage();
+							    			}
+										}
+									>
+										Pick Photo
+									</Text>
+								</View>
+							</View>
+							<View style={styles.rowSecond}>
+								<CsAppLabel>Comment</CsAppLabel>
+							    <CsInput
+								  	handleChange={handleChange}
+									values={values}
+									identifier="rmComment5"
+									multiline={true}
+								/>
+							</View>
+							<View style={styles.rowThird}>
+								<CsAppLabel>Grade</CsAppLabel>
+								<TouchableHighlight
+									style={styles.clickBoxWidth}
+									onPress={() => {
+										this.setModalColourVisible(true);
+										this.setWhichGrade(5);
+									}}
+								>
+									<View style={styles.clickBox}>
+										{ (values.rmGrade5 == 3) && <View style={styles.clickBoxGreen}></View> }
+										{ (values.rmGrade5 == 2) && <View style={styles.clickBoxOrange}></View> }
+										{ (values.rmGrade5 == 1) && <View style={styles.clickBoxRed}></View> }
+									</View>
+								</TouchableHighlight>
+							</View>
+						</View>
+
 						<View style={styles.row}>
 							<View style={styles.rowFirst}>
 								<CsAppLabel>Gutters</CsAppLabel>
@@ -185,10 +261,10 @@ class FormRainwaterManagement extends Component {
 						            onValueChange={handlePicker('rmGutters')}
 						        >
 						            <Picker.Item label="uPVC" value="uPVC" />
-						            <Picker.Item label="Composite" value="" />
+						            <Picker.Item label="Composite" value="Composite" />
 						            <Picker.Item label="Metal" value="Metal" />
 						            <Picker.Item label="Asbestos" value="Asbestos" />
-						            <Picker.Item label="N/A" value="N/A" />
+						            <Picker.Item label="Internal" value="Internal" />
 						        </Picker>
 						        <View style={styles.photoRow}>
 									<Text 

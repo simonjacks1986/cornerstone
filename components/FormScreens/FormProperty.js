@@ -100,7 +100,7 @@ class FormProperty extends Component {
 					              selectedValue={values.age}
 					              onValueChange={handlePicker('age')}
 					            >
-									<Picker.Item label="Pre 1885" value="Pre 1885" />
+									<Picker.Item label="Pre 1875" value="Pre 1875" />
 									<Picker.Item label="1885 - 1920" value="1885 - 1920" />
 									<Picker.Item label="1920 - 1950" value="1920 - 1950" />
 									<Picker.Item label="1950 - 1965" value="1950 - 1965" />

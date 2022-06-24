@@ -97,7 +97,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venTrickleVents}
 						            onValueChange={handlePicker('venTrickleVents')}
 						        >
@@ -135,7 +135,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venCondition1}
 						            onValueChange={handlePicker('venCondition1')}
 						        >
@@ -173,7 +173,7 @@ class FormVentilation extends Component {
 							            mode="dropdown"
 							            style={styles.picker}
 							            placeholder="- Select -"
-							            iosIcon={<Icon name="arrow-down" />}
+							            iosIcon={<Icon name="chevron-down" />}
 							            selectedValue={values.venTrickleVents2}
 							            onValueChange={handlePicker('venTrickleVents2')}
 							        >
@@ -211,7 +211,7 @@ class FormVentilation extends Component {
 							            mode="dropdown"
 							            style={styles.picker}
 							            placeholder="- Select -"
-							            iosIcon={<Icon name="arrow-down" />}
+							            iosIcon={<Icon name="chevron-down" />}
 							            selectedValue={values.venCondition21}
 							            onValueChange={handlePicker('venCondition21')}
 							        >
@@ -259,7 +259,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venPassiveVents}
 						            onValueChange={handlePicker('venPassiveVents')}
 						        >
@@ -295,7 +295,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venCondition2}
 						            onValueChange={handlePicker('venCondition2')}
 						        >
@@ -333,7 +333,7 @@ class FormVentilation extends Component {
 							            mode="dropdown"
 							            style={styles.picker}
 							            placeholder="- Select -"
-							            iosIcon={<Icon name="arrow-down" />}
+							            iosIcon={<Icon name="chevron-down" />}
 							            selectedValue={values.venPassiveVents2}
 							            onValueChange={handlePicker('venPassiveVents2')}
 							        >
@@ -369,7 +369,7 @@ class FormVentilation extends Component {
 							            mode="dropdown"
 							            style={styles.picker}
 							            placeholder="- Select -"
-							            iosIcon={<Icon name="arrow-down" />}
+							            iosIcon={<Icon name="chevron-down" />}
 							            selectedValue={values.venCondition22}
 							            onValueChange={handlePicker('venCondition22')}
 							        >
@@ -417,7 +417,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venTumbleDryer}
 						            onValueChange={handlePicker('venTumbleDryer')}
 						        >
@@ -436,7 +436,7 @@ class FormVentilation extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.venDryerMethod}
 						            onValueChange={handlePicker('venDryerMethod')}
 						        >

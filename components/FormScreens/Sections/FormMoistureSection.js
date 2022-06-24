@@ -76,7 +76,7 @@ class FormMoistureSection extends Component {
             mode="dropdown"
             style={styles.picker}
             placeholder="- Select -"
-            iosIcon={<Icon name="arrow-down" />}
+            iosIcon={<Icon name="chevron-down" />}
             selectedValue={values['simLocation'+iteration]}
             onValueChange={handlePicker('simLocation' + iteration)}
           >

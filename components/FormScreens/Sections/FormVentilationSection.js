@@ -22,7 +22,7 @@ class FormVentilationSection extends Component {
                 mode="dropdown"
                 style={styles.picker}
                 placeholder="- Select -"
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="chevron-down" />}
                 selectedValue={values['venRoom' + iteration]}
                 onValueChange={handlePicker('venRoom' + iteration)}
             >
@@ -40,7 +40,7 @@ class FormVentilationSection extends Component {
                 mode="dropdown"
                 style={styles.picker}
                 placeholder="- Select -"
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="chevron-down" />}
                 selectedValue={values['venUnitLocation' + iteration]}
                 onValueChange={handlePicker('venUnitLocation' + iteration)}
             >
@@ -78,7 +78,7 @@ class FormVentilationSection extends Component {
                 mode="dropdown"
                 style={styles.picker}
                 placeholder="- Select -"
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="chevron-down" />}
                 selectedValue={values['venHowOperated' + iteration]}
                 onValueChange={handlePicker('venHowOperated' + iteration)}
             >
@@ -96,7 +96,7 @@ class FormVentilationSection extends Component {
                 mode="dropdown"
                 style={styles.picker}
                 placeholder="- Select -"
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="chevron-down" />}
                 selectedValue={values['venFlowDevice' + iteration]}
                 onValueChange={handlePicker('venFlowDevice' + iteration)}
             >
@@ -133,7 +133,7 @@ class FormVentilationSection extends Component {
                 mode="dropdown"
                 style={styles.picker}
                 placeholder="- Select -"
-                iosIcon={<Icon name="arrow-down" />}
+                iosIcon={<Icon name="chevron-down" />}
                 selectedValue={values['venDoorUndercut' + iteration]}
                 onValueChange={handlePicker('venDoorUndercut' + iteration)}
             >

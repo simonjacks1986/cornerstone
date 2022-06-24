@@ -107,7 +107,7 @@ class FormInternalSection extends Component {
               mode="dropdown"
               style={styles.picker}
               placeholder="- Select -"
-              iosIcon={<Icon name="arrow-down" />}
+              iosIcon={<Icon name="chevron-down" />}
               selectedValue={values['intRoom'+iteration]}
               onValueChange={handlePicker("intRoom" + iteration)}
             >

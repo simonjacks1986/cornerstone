@@ -65,6 +65,7 @@ class UserForm extends Component {
 						nextStep={this.nextStep}
 						prevStep={this.prevStep}
 						handleChange={handleChange}
+						handleChoice={handleChoice}
 						handlePicker={handlePicker}
 						handleImage={handleImage}
 						values={values}

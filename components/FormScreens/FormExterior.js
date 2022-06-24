@@ -103,7 +103,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exFacade}
 						              onValueChange={handlePicker('exFacade')}
 						            >
@@ -126,7 +126,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exInsulated}
 						              onValueChange={handlePicker('exInsulated')}
 						            >
@@ -151,7 +151,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exConstruct}
 						              onValueChange={handlePicker('exConstruct')}
 						            >
@@ -170,7 +170,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exExFin}
 						              onValueChange={handlePicker('exExFin')}
 						            >
@@ -189,7 +189,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exFinish}
 						              onValueChange={handlePicker('exFinish')}
 						            >
@@ -267,7 +267,7 @@ class FormExterior extends Component {
 						              mode="dropdown"
 						              style={styles.picker}
 						              placeholder="- Select -"
-						              iosIcon={<Icon name="arrow-down" />}
+						              iosIcon={<Icon name="chevron-down" />}
 						              selectedValue={values.exBridging}
 						              onValueChange={handlePicker('exBridging')}
 						            >
@@ -346,7 +346,7 @@ class FormExterior extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.exWindows}
 						            onValueChange={handlePicker('exWindows')}
 						        >
@@ -424,7 +424,7 @@ class FormExterior extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.exDoors}
 						            onValueChange={handlePicker('exDoors')}
 						        >
@@ -503,7 +503,7 @@ class FormExterior extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.exFascias}
 						            onValueChange={handlePicker('exFascias')}
 						        >
@@ -582,7 +582,7 @@ class FormExterior extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.exStopCock}
 						            onValueChange={handlePicker('exStopCock')}
 						        >

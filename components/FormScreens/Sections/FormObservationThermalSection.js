@@ -82,7 +82,7 @@ class FormObservationSection extends Component {
             mode="dropdown"
             style={styles.picker}
             placeholder="- Select -"
-            iosIcon={<Icon name="arrow-down" />}
+            iosIcon={<Icon name="chevron-down" />}
             selectedValue={values['obsTherLocation' + iteration]}
             onValueChange={handlePicker('obsTherLocation' + iteration)}
           >

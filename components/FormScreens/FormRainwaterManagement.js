@@ -96,7 +96,7 @@ class FormRainwaterManagement extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.rmRoof}
 						            onValueChange={handlePicker('rmRoof')}
 						        >
@@ -176,7 +176,7 @@ class FormRainwaterManagement extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.rmRoofSys}
 						            onValueChange={handlePicker('rmRoofSys')}
 						        >
@@ -256,7 +256,7 @@ class FormRainwaterManagement extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.rmGutters}
 						            onValueChange={handlePicker('rmGutters')}
 						        >
@@ -335,7 +335,7 @@ class FormRainwaterManagement extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.rmPipes}
 						            onValueChange={handlePicker('rmPipes')}
 						        >
@@ -414,7 +414,7 @@ class FormRainwaterManagement extends Component {
 						            mode="dropdown"
 						            style={styles.picker}
 						            placeholder="- Select -"
-						            iosIcon={<Icon name="arrow-down" />}
+						            iosIcon={<Icon name="chevron-down" />}
 						            selectedValue={values.rmHoppers}
 						            onValueChange={handlePicker('rmHoppers')}
 						        >

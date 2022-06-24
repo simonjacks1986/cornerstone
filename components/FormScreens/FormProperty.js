@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import { MaterialIcons } from '@expo/vector-icons';
 import { Text, Image, Button, View, StyleSheet, TouchableOpacity, TouchableHighlight, ScrollView} from 'react-native';
 import { Picker, Icon, Container } from "native-base";
+import SectionedMultiSelect from 'react-native-sectioned-multi-select';
 import FormControls from '../Parts/FormControls';
 import CsAppText from '../Parts/CsAppText';
 import CsAppLabel from '../Parts/CsAppLabel';
@@ -13,6 +15,19 @@ import { Camera } from 'expo-camera';
 import FormModalCamera from '../Modal/FormModalCamera';
 import FormModalImage from '../Modal/FormModalImage';
 import theme from '../../assets/styles/common.js';
+
+const items = [{
+    name: 'Pick all that apply',
+    id: 0,
+    children: [
+    	{ name: 'Basement', id: 1 },
+      	{ name: 'Lower ground floor', id: 2 },
+      	{ name: 'Ground floor', id: 3 },
+      	{ name: '1st floor', id: 4 },
+      	{ name: '2nd floor', id: 5 },
+      	{ name: '3rd floor', id: 6 }
+    ],
+}];
 
 class FormProperty extends Component {
 	constructor(props) {
@@ -54,11 +69,15 @@ class FormProperty extends Component {
 			const { handleImage } = this.props;
 			handleImage(this.state.whichImage, saveResult.uri);
 	    }
+	};
 
+	onSelectedItemsChange = (selectedItems) => {
+		this.props.handleChoice('floorsOccupied', selectedItems)
+		console.log(selectedItems);
 	};
 
 	render(){
-		const { values, handleChange, handleImage, removeImage, handlePicker } = this.props;
+		const { values, handleChange, handleImage, handleChoice, removeImage, handlePicker } = this.props;
 		const { hasCameraPermission } = this.state;
 		if (hasCameraPermission === null) {
 			return <View />;
@@ -96,7 +115,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.age}
 					              onValueChange={handlePicker('age')}
 					            >
@@ -116,7 +135,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.period}
 					              onValueChange={handlePicker('period')}
 					            >
@@ -146,7 +165,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.type}
 					              onValueChange={handlePicker('type')}
 					            >
@@ -169,7 +188,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.status}
 					              onValueChange={handlePicker('status')}
 					            >
@@ -190,7 +209,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.dwelling}
 					              onValueChange={handlePicker('dwelling')}
 					            >
@@ -202,22 +221,39 @@ class FormProperty extends Component {
 
 					        <View style={styles.one2}>
 								<CsAppLabel>Floors occupied</CsAppLabel>
-								<Picker
-					              note
-					              mode="dropdown"
-					              style={styles.picker}
-					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
-					              selectedValue={values.floorsOccupied}
-					              onValueChange={handlePicker('floorsOccupied')}
-					            >
-									<Picker.Item label="Basement" value="Basement" />
-									<Picker.Item label="Lower ground floor" value="Lower ground floor" />
-									<Picker.Item label="Ground floor" value="Ground floor" />
-									<Picker.Item label="1st Floor" value="1st Floor" />
-									<Picker.Item label="2nd Floor" value="2nd Floor" />
-									<Picker.Item label="3rd Floor" value="3rd Floor" />
-					            </Picker>
+					            <SectionedMultiSelect
+									items={items}
+									IconRenderer={MaterialIcons}
+									uniqueKey="id"
+									subKey="children"
+									selectText="Select all that apply"
+									hideSearch={true}
+									showDropDowns={true}
+									expandDropDowns={true}
+									readOnlyHeadings={true}
+									onSelectedItemsChange={this.onSelectedItemsChange}
+									selectedItems={values.floorsOccupied}
+									colors={{ primary: theme.PRIMARY_COLOR, success: theme.PRIMARY_COLOR }}
+									styles={{
+										selectToggle: {
+											backgroundColor: "#fff",
+										    borderColor:'#DDDDDD',
+										    borderWidth:1,
+										    marginTop: 16,
+										    borderRadius: 2,
+										    marginBottom:10,
+										    height:40,
+											paddingLeft:10,
+											paddingRight:5,
+											paddingTop:7,
+											paddingBottom:5,
+										}
+									}}
+									itemFontFamily={{}}
+									subItemFontFamily={{}}
+									searchTextFontFamily={{}}
+									confirmFontFamily={{}}
+								/>
 					        </View>
 						</View>
 
@@ -229,7 +265,7 @@ class FormProperty extends Component {
 					              mode="dropdown"
 					              style={styles.picker}
 					              placeholder="- Select -"
-					              iosIcon={<Icon name="arrow-down" />}
+					              iosIcon={<Icon name="chevron-down" />}
 					              selectedValue={values.northFacing}
 					              onValueChange={handlePicker('northFacing')}
 					            >

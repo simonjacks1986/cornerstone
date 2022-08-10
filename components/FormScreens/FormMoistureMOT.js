@@ -33,7 +33,7 @@ class FormMoistureMOT extends Component {
 	}
 
 	async componentDidMount() {
-		const { status } = await Camera.requestPermissionsAsync();
+		const { status } = await Camera.requestCameraPermissionsAsync();
 		const { medStatus } = await MediaLibrary.requestPermissionsAsync();
 		this.setState({ hasCameraPermission: status === 'granted' });
 		this.setState({ hasPickerPermission: medStatus === 'granted' });

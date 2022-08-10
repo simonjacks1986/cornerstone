@@ -30,7 +30,7 @@ class FormObservationSection extends Component {
 
   getPermissionAsync = async () => {
     if (Constants.platform.ios) {
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to pick an image.');
       }

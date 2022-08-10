@@ -29,7 +29,7 @@ class FormExterior extends Component {
 	}
 
 	async componentDidMount() {
-		const { status } = await Camera.requestPermissionsAsync();
+		const { status } = await Camera.requestCameraPermissionsAsync();
 		this.setState({ hasCameraPermission: status === 'granted' });
 	};
 	

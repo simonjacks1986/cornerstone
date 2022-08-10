@@ -19,7 +19,7 @@ class FormModalCamera extends Component {
 	}
 
 	getPermissionAsync = async () => {  
-      const { status } = await Camera.requestPermissionsAsync();
+      const { status } = await Camera.requestCameraPermissionsAsync();
       if (status !== 'granted') {
         alert('Sorry, we need camera roll permissions to save images.');
       }

@@ -25,6 +25,15 @@ class FormExterior extends Component {
 	    whichGrade: 1,
 	    whichImage: "notSet",
 	    hasCameraPermission: null,
+	    advisoriesOptions: {
+	    	1: ['Finish Condition', 'exFinish', 'exComment1'],
+	    	2: ['Bridging', 'exBridging', 'exComment2'],
+	    	3: ['Windows', 'exWindows', 'exComment3'],
+	    	4: ['Doors', 'exDoors', 'exComment4'],
+	    	5: ['Fascias/Soffits', 'exFascias', 'exComment5'],
+	    	6: ['Stop Cock', 'exStopCock', 'exComment6'],
+	    },
+	    advisories: []
 	  };
 	}
 
@@ -42,6 +51,22 @@ class FormExterior extends Component {
 		const { handleColourChoice } = this.props;
 		handleColourChoice('exGrade' + this.state.whichGrade, which);
 		this.setModalColourVisible(!this.state.modalColourVisible);
+	}
+	setAdvisories = () => {
+		let advisories = this.state.advisoriesOptions
+
+		const keys = Object.keys(advisories);
+		let pushAdvisories = [];
+		keys.forEach((key, index) => {
+			if (this.props.values['exGrade' + key] == 1) {
+				let pushItems = []
+				this.state.advisoriesOptions[key].map( (i, key) => {
+					(key == 0) ? pushItems.push(i) : pushItems.push(this.props.values[i])
+				} )
+				pushAdvisories.push(pushItems);
+			}
+		});
+		this.props.handleAdvisories('2.0 Exterior', pushAdvisories)
 	}
 
 	_pickImage = async () => {
@@ -65,7 +90,7 @@ class FormExterior extends Component {
 	};
 
 	render(){
-		const { values, handleChange, handleImage, handlePicker, removeImage } = this.props;
+		const { values, handleChange, handleImage, handlePicker, removeImage, handleAdvisories } = this.props;
 		
 		return(
 			<Container style={styles.container}>
@@ -656,6 +681,7 @@ class FormExterior extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 			</Container>
 		)

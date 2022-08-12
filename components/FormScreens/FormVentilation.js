@@ -17,7 +17,15 @@ class FormVentilation extends Component {
 			modalVisible: false,
 			additionalSections: this.props.values.venAmountOfSections,
 			addSection1: false,
-			addSection2: false
+			addSection2: false,
+			advisoriesOptions: {
+		    	1: ['Trickle vents location', 'venTrickleVents', 'venCondition1'],
+		    	4: ['Trickle vents second location', 'venTrickleVents2', 'venCondition21'],
+		    	2: ['Passive vents location', 'venPassiveVents', 'venCondition2'],
+		    	5: ['Passive vents second location', 'venPassiveVents2', 'venCondition22'],
+		    	3: ['Tumble Dryer Outlet', 'venTumbleDryer', 'venDryerMethod'],
+		    },
+		    advisories: []
 		};
 	}
 
@@ -38,6 +46,23 @@ class FormVentilation extends Component {
 	setAdditionalLocation = (key) => {
 		this.setState({[key]: !this.state[key]});	
 	}
+
+	setAdvisories = () => {
+		let advisories = this.state.advisoriesOptions
+		const keys = Object.keys(advisories);
+		let pushAdvisories = [];
+		keys.forEach((key, index) => {
+			if (this.props.values['venGrade' + key] == 1) {
+				let pushItems = []
+				this.state.advisoriesOptions[key].map( (i, key) => {
+					(key == 0) ? pushItems.push(i) : pushItems.push(this.props.values[i])
+				} )
+				pushAdvisories.push(pushItems);
+			}
+		});
+		this.props.handleAdvisories('4.0 Ventilation', pushAdvisories)
+	}
+
 	handleColours = which =>{
 		const { handleColourChoice } = this.props;
 		handleColourChoice('venGrade' + this.state.whichGrade, which);
@@ -472,6 +497,7 @@ class FormVentilation extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 					
 			</Container>

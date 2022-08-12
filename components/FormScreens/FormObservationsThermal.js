@@ -22,6 +22,7 @@ class FormObservationsThermal extends Component {
 	    whichImage: "notSet",
 	    hasCameraPermission: null,
 	    additionalSections: this.props.values.obstAmountOfSections,
+	    advisories: []
 	  };
 	}
 	
@@ -43,6 +44,24 @@ class FormObservationsThermal extends Component {
 		    const { handleColourChoice } = this.props;
 		    handleColourChoice('obstAmountOfSections', this.state.additionalSections + amount);
 		}
+	}
+
+	setAdvisories = () => {
+		let pushAdvisories = [];
+		let inc = 1
+		let pushItems = []
+		while(inc <= this.state.additionalSections) {
+			if (this.props.values['obsTherGrade' + inc] == 1) {
+				let loopItem = [
+					"Location",
+					this.props.values['obsTherLocation' + inc],
+					this.props.values['obsTherComment' + inc]
+				]
+				pushItems.push(loopItem)
+			}
+			inc++
+		}
+		this.props.handleAdvisories('6.1 Observations - Thermal', pushItems)
 	}
 
 	render(){
@@ -107,6 +126,7 @@ class FormObservationsThermal extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 			</Container>
 		)

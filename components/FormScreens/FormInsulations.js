@@ -25,6 +25,11 @@ class FormInsulations extends Component {
 		    whichGrade: 1,
 		    whichImage: "notSet",
 		    hasCameraPermission: null,
+		    advisoriesOptions: {
+		    	1: ['Loft Insulations', 'insCoverage1', 'insDescription'],
+		    	2: ['Other', 'insCoverage2', 'insDescription2'],
+		    },
+		    advisories: []
 		};
 	}
 
@@ -33,7 +38,23 @@ class FormInsulations extends Component {
 	setModalImageVisible = visible => this.setState({modalImageVisible: visible});
 	setWhichGrade = which => this.setState({whichGrade: which});
 	setWhichImage = which => this.setState({whichImage: which});
-	
+
+	setAdvisories = () => {
+		let advisories = this.state.advisoriesOptions
+		const keys = Object.keys(advisories);
+		let pushAdvisories = [];
+		keys.forEach((key, index) => {
+			if (this.props.values['insGrade' + key] == 1) {
+				let pushItems = []
+				this.state.advisoriesOptions[key].map( (i, key) => {
+					(key == 0) ? pushItems.push(i) : pushItems.push(this.props.values[i])
+				} )
+				pushAdvisories.push(pushItems);
+			}
+		});
+		this.props.handleAdvisories('5.0 Insulations', pushAdvisories)
+	}
+
 	handleColours = which => {
 		const { handleColourChoice } = this.props;
 		handleColourChoice('insGrade' + this.state.whichGrade, which);
@@ -258,6 +279,7 @@ class FormInsulations extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 			</Container>
 		)

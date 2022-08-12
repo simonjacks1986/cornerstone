@@ -22,6 +22,7 @@ export default class MotApp extends React.Component {
       isUploading: false,
       validating: false,
       photos: {},
+      advisories: {},
       suAmountOfSections: 1,
       moAmountOfSections: 1,
       simAmountOfSections: 1,
@@ -154,6 +155,15 @@ export default class MotApp extends React.Component {
         }
     })
   }
+  handleAdvisories = (name, value) => {
+    this.setState({
+      advisories: {
+          ...this.state.advisories,
+          [name]: value
+        }
+    })
+    console.log(this.state.advisories);
+  }
 
   removeImage = (name) => {
     let newImageObject = { photos:{} }
@@ -280,6 +290,7 @@ export default class MotApp extends React.Component {
           handleChoice={this.handleChoice}
           handleSignature={this.handleSignature}
           handleFormSubmit={this.handleFormSubmit}
+          handleAdvisories={this.handleAdvisories}
         />
         
         

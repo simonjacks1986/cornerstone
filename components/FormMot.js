@@ -35,7 +35,7 @@ class UserForm extends Component {
 
 	render(){
 		const { step } = this.state;
-		const {values, handleChange, validate, handlePicker, handleImage, handleChoice, handleSignature, handleFormSubmit, handleSetDate, removeImage, compressImages } = this.props;
+		const {values, handleChange, validate, handlePicker, handleImage, handleChoice, handleSignature, handleFormSubmit, handleAdvisories, handleSetDate, removeImage, compressImages } = this.props;
 
 		
 		switch(step){
@@ -81,6 +81,7 @@ class UserForm extends Component {
 						handlePicker={handlePicker}
 						handleImage={handleImage}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						values={values}
 						removeImage={removeImage}
 					/>
@@ -94,6 +95,7 @@ class UserForm extends Component {
 						handlePicker={handlePicker}
 						handleImage={handleImage}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						values={values}
 						removeImage={removeImage}
 					/>
@@ -107,6 +109,7 @@ class UserForm extends Component {
 						handlePicker={handlePicker}
 						handleTickBox={handleChoice}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						handleImage={handleImage}
 						values={values}
 						removeImage={removeImage}
@@ -132,6 +135,7 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						handleImage={handleImage}
 						values={values}
 						removeImage={removeImage}
@@ -145,6 +149,7 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						values={values}
 					/>
 				)
@@ -156,6 +161,7 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						handleTickBox={handleChoice}
 						handleImage={handleImage}
 						values={values}
@@ -170,6 +176,7 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						handleImage={handleImage}
 						values={values}
 						removeImage={removeImage}
@@ -183,6 +190,7 @@ class UserForm extends Component {
 						handleChange={handleChange}
 						handlePicker={handlePicker}
 						handleColourChoice={handleChoice}
+						handleAdvisories={handleAdvisories}
 						handleImage={handleImage}
 						values={values}
 						removeImage={removeImage}

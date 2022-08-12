@@ -7,10 +7,12 @@ class FormControls extends Component {
 	continue = e => {
 		e.preventDefault();
 		this.props.nextStep();
+		(this.props.setAdvisories) && this.props.setAdvisories()
 	}
 	back = e => {
 		e.preventDefault();
 		this.props.prevStep();
+		(this.props.setAdvisories) && this.props.setAdvisories()
 	}
 	render() {
 		return (

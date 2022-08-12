@@ -23,6 +23,7 @@ class FormObservationsGeneral extends Component {
 	    whichImage: "notSet",
 	    hasCameraPermission: null,
 	    additionalSections: this.props.values.obsgAmountOfSections,
+	    advisories: []
 	  };
 	}
 	
@@ -44,6 +45,23 @@ class FormObservationsGeneral extends Component {
 		    const { handleColourChoice } = this.props;
 		    handleColourChoice('obsgAmountOfSections', this.state.additionalSections + amount);
 		}
+	}
+	setAdvisories = () => {
+		let pushAdvisories = [];
+		let inc = 1
+		let pushItems = []
+		while(inc <= this.state.additionalSections) {
+			if (this.props.values['obsGrade' + inc] == 1) {
+				let loopItem = [
+					"Location",
+					this.props.values['obsLocation' + inc],
+					this.props.values['obsComment' + inc]
+				]
+				pushItems.push(loopItem)
+			}
+			inc++
+		}
+		this.props.handleAdvisories('6.0 Observations - General', pushItems)
 	}
 
 	render(){
@@ -115,6 +133,7 @@ class FormObservationsGeneral extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 			</Container>
 		)

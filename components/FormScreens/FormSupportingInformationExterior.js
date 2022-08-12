@@ -17,6 +17,7 @@ class FormSupportingInformationExterior extends Component {
 			modalColourVisible: false,
 			whichGrade: 1,
 			additionalSections: this.props.values.suAmountOfSections,
+			advisories: []
 		};
 	}
 	
@@ -31,6 +32,24 @@ class FormSupportingInformationExterior extends Component {
 		    const { handleColourChoice } = this.props;
 		    handleColourChoice('suAmountOfSections', this.state.additionalSections + amount);
 		}
+	}
+
+	setAdvisories = () => {
+		let pushAdvisories = [];
+		let inc = 1
+		let pushItems = []
+		while(inc <= this.state.additionalSections) {
+			if (this.props.values['suGrade' + inc] == 1) {
+				let loopItem = [
+					"Title",
+					this.props.values['suTitle' + inc],
+					this.props.values['suComment' + inc]
+				]
+				pushItems.push(loopItem)
+			}
+			inc++
+		}
+		this.props.handleAdvisories('2.2 Supporting Information Exterior', pushItems)
 	}
 	
 	handleColours = which => {
@@ -112,6 +131,7 @@ class FormSupportingInformationExterior extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 
 			</Container>

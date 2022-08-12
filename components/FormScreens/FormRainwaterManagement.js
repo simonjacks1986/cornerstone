@@ -24,6 +24,14 @@ class FormRainwaterManagement extends Component {
 	  	modalImageVisible: false,
 	    whichGrade: 1,
 	    whichImage: "notSet",
+	    advisoriesOptions: {
+	    	1: ['Roof Type', 'rmRoof', 'rmComment1'],
+	    	2: ['Roof System', 'rmRoofSys', 'rmComment2'],
+	    	3: ['Gutters', 'rmGutters', 'rmComment3'],
+	    	4: ['Downpipes', 'rmPipes', 'rmComment4'],
+	    	5: ['Hoppers', 'rmHoppers', 'rmComment5'],
+	    },
+	    advisories: []
 	  }; 
 	}
 	
@@ -37,6 +45,22 @@ class FormRainwaterManagement extends Component {
 		handleColourChoice('rmGrade' + this.state.whichGrade, which);
 		this.setModalColourVisible(!this.state.modalColourVisible);
 	}
+	setAdvisories = () => {
+		let advisories = this.state.advisoriesOptions
+		const keys = Object.keys(advisories);
+		let pushAdvisories = [];
+		keys.forEach((key, index) => {
+			if (this.props.values['rmGrade' + key] == 1) {
+				let pushItems = []
+				this.state.advisoriesOptions[key].map( (i, key) => {
+					(key == 0) ? pushItems.push(i) : pushItems.push(this.props.values[i])
+				} )
+				pushAdvisories.push(pushItems);
+			}
+		});
+		this.props.handleAdvisories('2.1 Rainwater Management', pushAdvisories)
+	}
+
 	_pickImage = async () => {
 	    let result = await ImagePicker.launchImageLibraryAsync({
 	      mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -490,6 +514,7 @@ class FormRainwaterManagement extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 					
 			</Container>

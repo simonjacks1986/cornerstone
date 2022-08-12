@@ -17,6 +17,7 @@ class FormSupportingInformationMoistureSurvey extends Component {
 			modalVisible: false,
 			whichGrade: 1,
 			additionalSections: this.props.values.simAmountOfSections,
+			advisories: []
 		};
 	}
 	
@@ -33,6 +34,23 @@ class FormSupportingInformationMoistureSurvey extends Component {
 		    const { handleColourChoice } = this.props;
 		    handleColourChoice('simAmountOfSections', this.state.additionalSections + amount);
 		}
+	}
+	setAdvisories = () => {
+		let pushAdvisories = [];
+		let inc = 1
+		let pushItems = []
+		while(inc <= this.state.additionalSections) {
+			if (this.props.values['simGrade' + inc] == 1) {
+				let loopItem = [
+					"Location",
+					this.props.values['simLocation' + inc],
+					this.props.values['simComment' + inc]
+				]
+				pushItems.push(loopItem)
+			}
+			inc++
+		}
+		this.props.handleAdvisories('3.1 Supporting Information Moisture Survey', pushItems)
 	}
 
 	handleColours = which => {
@@ -91,6 +109,7 @@ class FormSupportingInformationMoistureSurvey extends Component {
 				<FormControls
 					nextStep={this.props.nextStep}
 					prevStep={this.props.prevStep}
+					setAdvisories={this.setAdvisories}
 				/>
 					
 			</Container>

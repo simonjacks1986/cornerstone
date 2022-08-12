@@ -43,6 +43,7 @@ class FormAdvisories extends Component {
 
 	render(){
 		const { values, handleChange, handlePicker, handleSignature, handleChoice, handleFormSubmit, prevStep } = this.props;
+		const advisories = values.advisories
 		return(
 			<Container style={styles.container}>
 				<ScrollView>
@@ -60,7 +61,40 @@ class FormAdvisories extends Component {
 					/>
 
 					<CsAppTitle>8.0 Advisories</CsAppTitle>
-					<CsAppText>Enter the survey details below.</CsAppText>
+					{
+						Object.keys(advisories).length > 0 &&
+						<CsAppText>Survey advisories.</CsAppText>
+					}
+					
+					{ 
+
+						Object.keys(advisories).map((key) => {
+							if (advisories[key].length > 0) {
+						    return (
+						    	<View style={{marginBottom: 20}}>
+						    	
+						    		<Text>{key}</Text>
+					    			{
+
+					    				advisories[key].map((val, i ) => {
+					    					return(
+					    						<View style={{marginTop: 5}}>
+					    							<View style={{flex: 1, flexDirection: "row" }}>
+						    							<Text style={{fontWeight: 'bold', marginRight: 10}}>{val[0]}:</Text>
+						    							<Text>{val[1]}</Text>
+						    						</View>
+					    							<Text>{val[2]}</Text>
+					    						</View>
+					    					)
+					    				})
+					    			}
+						    	</View>
+						    ) 
+						    }
+						})
+							
+					}
+					<CsAppText>Enter any additional advisory details below.</CsAppText>
 					<View>
 						<View style={styles.whiteBlock}>
 							<View style={styles.row}>
